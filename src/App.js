@@ -31,6 +31,9 @@ function App() {
       setStep((s) => s - 1);
     }
   }
+  function handleTrimiteDinNou() {
+    setStep((s) => 2);
+  }
   function handleLoggingIn() {
     console.log("Am intrat pe aicea.");
     setLoggedIn(true);

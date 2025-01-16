@@ -20,7 +20,7 @@ function AcceptareColaborare() {
     <div>
       <div className="acceptareContainer">
         <i className="bi bi-check-circle-fill text-success"></i>
-        <p className="text-success fw-bold mt-2">Succes</p>
+        <p className="text-success fw-bold mt-2">Acceptata</p>
       </div>
       <div className="acceptareContainerV2">
         <p>
