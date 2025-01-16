@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 
-function RaspunsCerere() {
+function RaspunsCerere({ onTrimiteDinNou }) {
   const [primita, setIsPrimita] = useState(false);
+  const [aprobata, setIsAprobata] = useState(false);
 
   function handlePrimireCerere() {
     setIsPrimita(true);
+    setIsAprobata(true);
+  }
+  function handleRespingereCerere() {
+    setIsPrimita(true);
+    setIsAprobata(false);
   }
 
   return primita === false ? (
@@ -19,8 +25,9 @@ function RaspunsCerere() {
         </p>
       </div>
       <button onClick={handlePrimireCerere}>A venit</button>
+      <button onClick={handleRespingereCerere}>A fost respinsa</button>
     </>
-  ) : (
+  ) : aprobata === true ? (
     <>
       <div className="acceptareContainer">
         <i className="bi bi-check-circle-fill text-success"></i>
@@ -39,6 +46,23 @@ function RaspunsCerere() {
         >
           Descarcă Documentul
         </a>
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="acceptareContainer">
+        <i className="bi bi-x-circle-fill text-danger"></i>
+        <p className="text-danger fw-bold mt-2">Respinsa</p>
+      </div>
+      <div className="acceptareContainerV2">
+        <p>
+          Cererea ta a fost respinsa de catre profesorul coordonator.Probabil
+          ceva din ce ai completat este gresit.
+        </p>
+        <p>Trimite din nou</p>
+        <button className="formButton" onClick={onTrimiteDinNou}>
+          Incearca din nou
+        </button>
       </div>
     </>
   );

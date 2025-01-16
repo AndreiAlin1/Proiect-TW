@@ -27,6 +27,9 @@ function App() {
       setStep((s) => s - 1);
     }
   }
+  function handleTrimiteDinNou() {
+    setStep((s) => 2);
+  }
   function handleLoggingIn() {
     console.log("Am intrat pe aicea.");
     setLoggedIn(true);
@@ -39,7 +42,11 @@ function App() {
       {step === 0 ? <FormCompletare></FormCompletare> : false}
       {step === 1 ? <AlegeProfesor></AlegeProfesor> : false}
       {step === 2 ? <AcceptareColaborare></AcceptareColaborare> : false}
-      {step === 3 ? <RaspunsCerere></RaspunsCerere> : false}
+      {step === 3 ? (
+        <RaspunsCerere onTrimiteDinNou={handleTrimiteDinNou}></RaspunsCerere>
+      ) : (
+        false
+      )}
       <div className="butoane">
         <button onClick={handleNext}>Next</button>
         <button onClick={handlePrev}>Previous</button>
