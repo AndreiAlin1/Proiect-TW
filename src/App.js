@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import NavBar from "./Components/NavBar";
+import { useState } from "react";
+import FormCompletare from "./Components/FormCompletare";
+import "./Styles/FormCompletareCSS.css";
+import "./Styles/Status.css";
+import "bootstrap-icons/font/bootstrap-icons.css"; // Pentru iconițe
+import AlegeProfesor from "./Components/AlegeProfesor";
+import "./Styles/AlegeProfesor.css";
 function App() {
+  const [step, setStep] = useState(0);
+  function handleNext() {
+    if (step < 3) {
+      setStep((s) => s + 1);
+    }
+  }
+  function handlePrev() {
+    if (step > 0) {
+      setStep((s) => s - 1);
+    }
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <NavBar stepProp={step}></NavBar>
+      {step === 0 ? <FormCompletare></FormCompletare> : false}
+      {step === 1 ? <AlegeProfesor></AlegeProfesor> : false}
+      <div className="butoane">
+        <button onClick={handleNext}>Next</button>
+        <button onClick={handlePrev}>Previous</button>
+      </div>
+    </>
   );
 }
 
