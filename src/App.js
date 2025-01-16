@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from './Pages/DashBoard';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Dashboard from "./Pages/DashBoard";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavBar from "./Components/NavBar";
@@ -45,20 +45,34 @@ function App() {
         <Route
           path="/"
           element={
-            <>
-              <NavBar stepProp={step} />
-              {step === 0 ? <FormCompletare /> : false}
-              {step === 1 ? <AlegeProfesor /> : false}
-              {step === 2 ? <AcceptareColaborare></AcceptareColaborare> : false}
-              {step === 3 ? <RaspunsCerere></RaspunsCerere> : false}
-              <div className="butoane">
-                <button onClick={handleNext}>Next</button>
-                <button onClick={handlePrev}>Previous</button>
-              </div>
-            </>
+            loggedIn === true ? (
+              <>
+                <NavBar stepProp={step} />
+                {step === 0 ? <FormCompletare /> : false}
+                {step === 1 ? <AlegeProfesor /> : false}
+                {step === 2 ? (
+                  <AcceptareColaborare></AcceptareColaborare>
+                ) : (
+                  false
+                )}
+                {step === 3 ? (
+                  <RaspunsCerere
+                    onTrimiteDinNou={handleTrimiteDinNou}
+                  ></RaspunsCerere>
+                ) : (
+                  false
+                )}
+                <div className="butoane">
+                  <button onClick={handleNext}>Next</button>
+                  <button onClick={handlePrev}>Previous</button>
+                </div>
+              </>
+            ) : (
+              <LoginScreen onLoggingIn={handleLoggingIn}></LoginScreen>
+            )
           }
         />
-      </Routes >
+      </Routes>
     </Router>
   );
 }
