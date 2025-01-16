@@ -11,6 +11,11 @@
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Umbra mai proeminentă */
 }
 
+.profesorContainer:hover {
+  transform: scale(1.02); /* Efect de hover */
+  cursor: pointer;
+}
+
 .profesorGroup {
   margin-bottom: 30px; /* Spațiere mai mare între grupuri */
   padding: 20px;

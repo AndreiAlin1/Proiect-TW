@@ -17,7 +17,7 @@ function AlegeProfesor() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            handleIsSent();
+            if (profesor !== "") handleIsSent();
           }}
           className="profesorContainer"
         >
@@ -31,13 +31,18 @@ function AlegeProfesor() {
               onChange={(e) => setProfesor(e.target.value)}
               required
             >
-              <option value="">Selecteaza</option>
+              <option>Selecteaza</option>
               {profesoriDummy.map((element) => (
                 <option value={element}>{element}</option>
               ))}
             </select>
           </div>
-          <button type="submit" className="formButton" onClick={handleIsSent}>
+          <button
+            type="submit"
+            className="formButton"
+            onClick={handleIsSent}
+            disabled={!profesor}
+          >
             Trimite
           </button>
         </form>
