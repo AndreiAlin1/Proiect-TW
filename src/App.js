@@ -1,3 +1,5 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Dashboard from './Pages/DashBoard';
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavBar from "./Components/NavBar";
@@ -14,6 +16,8 @@ import RaspunsCerere from "./Components/RaspunsCerere";
 import "./Styles/RaspunsCerere.css";
 import LoginScreen from "./Components/LoginScreen";
 import "./Styles/LoginScreen.css";
+import "./Pages/DashBoard.jsx";
+
 function App() {
   const [step, setStep] = useState(0);
   const [loggedIn, setLoggedIn] = useState(false);
@@ -31,20 +35,28 @@ function App() {
     console.log("Am intrat pe aicea.");
     setLoggedIn(true);
   }
-  return loggedIn === false ? (
-    <LoginScreen onLoggingIn={handleLoggingIn}></LoginScreen>
-  ) : (
-    <>
-      <NavBar stepProp={step}></NavBar>
-      {step === 0 ? <FormCompletare></FormCompletare> : false}
-      {step === 1 ? <AlegeProfesor></AlegeProfesor> : false}
-      {step === 2 ? <AcceptareColaborare></AcceptareColaborare> : false}
-      {step === 3 ? <RaspunsCerere></RaspunsCerere> : false}
-      <div className="butoane">
-        <button onClick={handleNext}>Next</button>
-        <button onClick={handlePrev}>Previous</button>
-      </div>
-    </>
+  return (
+    <Router>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/"
+          element={
+            <>
+              <NavBar stepProp={step} />
+              {step === 0 ? <FormCompletare /> : false}
+              {step === 1 ? <AlegeProfesor /> : false}
+              {step === 2 ? <AcceptareColaborare></AcceptareColaborare> : false}
+              {step === 3 ? <RaspunsCerere></RaspunsCerere> : false}
+              <div className="butoane">
+                <button onClick={handleNext}>Next</button>
+                <button onClick={handlePrev}>Previous</button>
+              </div>
+            </>
+          }
+        />
+      </Routes >
+    </Router>
   );
 }
 

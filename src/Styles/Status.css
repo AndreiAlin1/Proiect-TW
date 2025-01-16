@@ -57,9 +57,10 @@
   transition: background-color 0.3s ease;
 }
 
-button:hover {
+/* ti am comentat asta ca nu le mai definesti global ca se aplica peste tot in toate fisierle*/
+/* button:hover {
   background-color: #388e3c;
-}
+} */
 
 .statusContainer i {
   font-size: 2.5rem; /* Dimensiunea săgeților */
