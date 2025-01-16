@@ -12,8 +12,11 @@ import AcceptareColaborare from "./Components/AcceptareColaborare";
 import "./Styles/AcceptareColaborare.css";
 import RaspunsCerere from "./Components/RaspunsCerere";
 import "./Styles/RaspunsCerere.css";
+import LoginScreen from "./Components/LoginScreen";
+import "./Styles/LoginScreen.css";
 function App() {
   const [step, setStep] = useState(0);
+  const [loggedIn, setLoggedIn] = useState(false);
   function handleNext() {
     if (step < 3) {
       setStep((s) => s + 1);
@@ -24,7 +27,13 @@ function App() {
       setStep((s) => s - 1);
     }
   }
-  return (
+  function handleLoggingIn() {
+    console.log("Am intrat pe aicea.");
+    setLoggedIn(true);
+  }
+  return loggedIn === false ? (
+    <LoginScreen onLoggingIn={handleLoggingIn}></LoginScreen>
+  ) : (
     <>
       <NavBar stepProp={step}></NavBar>
       {step === 0 ? <FormCompletare></FormCompletare> : false}

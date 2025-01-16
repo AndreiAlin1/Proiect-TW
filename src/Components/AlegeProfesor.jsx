@@ -51,9 +51,7 @@ function AlegeProfesor() {
           <span className="pendingIcon">
             <i className="bi bi-clock"></i>
           </span>
-          <p>
-            Profesorul coordonator a fost instiintat. Se aspteata un raspuns.
-          </p>
+          <p>{profesor} a fost instiintat. Se aspteata un raspuns.</p>
         </div>
       )}
     </>
