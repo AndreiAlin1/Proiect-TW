@@ -8,8 +8,8 @@
 }
 
 .statusContainer div {
-  width: 120px; /* Lățimea mărită pentru text */
-  height: 120px; /* Înălțimea mărită pentru text */
+  width: 140px; /* Lățimea mărită pentru text */
+  height: 140px; /* Înălțimea mărită pentru text */
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -28,7 +28,8 @@
 
 .statusContainer div.statusActive {
   background-color: rgb(55, 53, 53);
-  color: rgb(228, 209, 174); /* Textul activ */
+  /* color: rgb(228, 209, 174); */
+  color: rgb(248, 243, 226);
   border-color: rgb(252, 211, 134);
   /* border-color: black; */
 }
