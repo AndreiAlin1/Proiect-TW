@@ -4,7 +4,7 @@
   align-items: flex-start;
   max-width: 450px; /* Mărit pentru un aspect mai aerisit */
   margin: 5px auto;
-  padding: 40px;
+  padding: 20px;
   border: 1px solid #444;
   border-radius: 20px; /* Colțuri mai rotunjite */
   background-color: #2c2c2c; /* Fundal pentru tema dark */
@@ -17,7 +17,7 @@
 }
 
 .formGroup {
-  margin-bottom: 25px; /* Spațiere mai mare între grupuri */
+  margin-bottom: 8px; /* Spațiere mai mare între grupuri */
   padding: 15px;
   width: 100%;
   background-color: #3a3a3a; /* Fundal mai deschis pentru contrast */

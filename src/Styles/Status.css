@@ -28,9 +28,15 @@
 
 .statusContainer div.statusActive {
   background-color: rgb(55, 53, 53);
-  color: rgb(247, 199, 110); /* Textul activ */
+  color: rgb(228, 209, 174); /* Textul activ */
   border-color: rgb(252, 211, 134);
   /* border-color: black; */
+}
+
+.statusContainer div.statusInactive {
+  background-color: rgb(185, 173, 173);
+  color: rgb(0, 0, 0); /* Textul activ */
+  border-color: rgb(66, 63, 58);
 }
 
 .statusContainer div:hover {

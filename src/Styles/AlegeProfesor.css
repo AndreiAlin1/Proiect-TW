@@ -89,12 +89,17 @@
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Umbra pentru adâncime */
 }
 
+.paragrafContainer:hover {
+  transform: scale(1.02); /* Efect de hover */
+  cursor: pointer;
+}
+
 .paragrafContainer p {
   font-size: 18px; /* Dimensiune text pentru lizibilitate */
   background-color: #2c2c2c; /* Fundal pentru tema dark */
   line-height: 1.8; /* Spațiere între linii */
   color: #d8d7d7; /* Culoare text deschisă */
-  text-align: justify; /* Aliniere uniformă pentru un aspect curat */
+  text-align: center; /* Aliniere uniformă pentru un aspect curat */
   margin: 0; /* Eliminare margini implicite */
 }
 

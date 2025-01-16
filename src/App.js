@@ -10,6 +10,8 @@ import AlegeProfesor from "./Components/AlegeProfesor";
 import "./Styles/AlegeProfesor.css";
 import AcceptareColaborare from "./Components/AcceptareColaborare";
 import "./Styles/AcceptareColaborare.css";
+import RaspunsCerere from "./Components/RaspunsCerere";
+import "./Styles/RaspunsCerere.css";
 function App() {
   const [step, setStep] = useState(0);
   function handleNext() {
@@ -28,6 +30,7 @@ function App() {
       {step === 0 ? <FormCompletare></FormCompletare> : false}
       {step === 1 ? <AlegeProfesor></AlegeProfesor> : false}
       {step === 2 ? <AcceptareColaborare></AcceptareColaborare> : false}
+      {step === 3 ? <RaspunsCerere></RaspunsCerere> : false}
       <div className="butoane">
         <button onClick={handleNext}>Next</button>
         <button onClick={handlePrev}>Previous</button>

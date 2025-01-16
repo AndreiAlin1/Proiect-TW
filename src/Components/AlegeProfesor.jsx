@@ -49,7 +49,7 @@ function AlegeProfesor() {
       ) : (
         <div className="paragrafContainer">
           <span className="pendingIcon">
-            <i className="bi bi-clock"></i> Pending
+            <i className="bi bi-clock"></i>
           </span>
           <p>
             Profesorul coordonator a fost instiintat. Se aspteata un raspuns.

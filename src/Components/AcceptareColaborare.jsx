@@ -10,7 +10,6 @@ function AcceptareColaborare() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (selectedFile) {
-      // Aici se va adăuga logica pentru încărcarea fișierului
       alert(`Fișierul ${selectedFile.name} a fost încărcat cu succes.`);
     } else {
       alert("Te rugăm să selectezi un fișier înainte de a trimite.");
@@ -19,17 +18,9 @@ function AcceptareColaborare() {
 
   return (
     <div>
-      <div className="acceptareContainer ">
-        <i
-          className="bi bi-check-circle-fill text-success"
-          style={{ fontSize: "2rem", backgroundColor: "#2c2c2c;" }}
-        ></i>
-        <p
-          className="text-success fw-bold mt-2"
-          style={{ backgroundColor: "#2c2c2c;" }}
-        >
-          Succes
-        </p>
+      <div className="acceptareContainer">
+        <i className="bi bi-check-circle-fill text-success"></i>
+        <p className="text-success fw-bold mt-2">Succes</p>
       </div>
       <div className="acceptareContainerV2">
         <p>
@@ -41,10 +32,17 @@ function AcceptareColaborare() {
           <div className="mb-3">
             <input
               type="file"
-              className="form-control"
+              id="fileInput"
+              className="form-control visually-hidden"
               onChange={handleFileChange}
               required
             />
+            <label htmlFor="fileInput" className="custom-file-upload">
+              <span className="custom-file-button">Choose File</span>
+              {selectedFile && (
+                <span className="custom-file-label">{selectedFile.name}</span>
+              )}
+            </label>
           </div>
           <button type="submit" className="formButton">
             Trimite Fișier

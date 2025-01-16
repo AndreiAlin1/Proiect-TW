@@ -12,6 +12,16 @@
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 }
 
+.acceptareContainer:hover {
+  transform: scale(1.02); /* Efect de hover */
+  cursor: pointer;
+}
+
+.acceptareContainerV2:hover {
+  transform: scale(1.02); /* Efect de hover */
+  cursor: pointer;
+}
+
 .acceptareContainer p {
   font-size: 18px;
   background-color: transparent; /* Eliminăm fundalul */
@@ -90,4 +100,59 @@ form {
   align-items: center;
   gap: 20px;
   background-color: #3a3a3a;
+}
+
+/* Actualizează doar aceste stiluri, păstrează restul neschimbat */
+.visually-hidden {
+  opacity: 0;
+  width: 0.1px;
+  height: 0.1px;
+  position: absolute;
+  z-index: -1;
+}
+
+.custom-file-upload {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #f4f4f4;
+}
+
+.custom-file-button {
+  padding: 8px 16px;
+  background-color: #444;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #f4f4f4;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.custom-file-label {
+  background-color: #3a3a3a;
+  color: #f4f4f4;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background-color: transparent;
+}
+
+.mb-3 {
+  width: 100%;
+  background-color: transparent;
 }
