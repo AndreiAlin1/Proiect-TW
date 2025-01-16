@@ -79,7 +79,7 @@
 .paragrafContainer {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   max-width: 500px; /* Lățime maximă pentru un aspect aerisit */
   margin: 30px auto; /* Centrare pe orizontală */
   padding: 30px; /* Spațiu interior */
@@ -89,6 +89,11 @@
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* Umbra pentru adâncime */
 }
 
+#parafInstiintare {
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
 .paragrafContainer:hover {
   transform: scale(1.02); /* Efect de hover */
   cursor: pointer;
