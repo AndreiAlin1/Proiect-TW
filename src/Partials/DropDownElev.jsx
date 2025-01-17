@@ -1,8 +1,8 @@
-import React from "react";
-import "../Styles/DropDown.css";
 import { Link } from "react-router-dom";
+import React from "react";
+import "../Styles/DropDownElev.css";
 
-export default function DropDown() {
+function DropDownElev() {
   return (
     <div className="hamburger-container">
       <input type="checkbox" id="menu-toggle" />
@@ -15,21 +15,18 @@ export default function DropDown() {
       <nav className="side-menu">
         <ul>
           <li>
-            <Link to="/" className="text-left text-dark mb-2">
+            <Link to="/profilElev" className="text-left text-dark mb-2">
               Profil
             </Link>
           </li>
           <li>
-            <Link to="/dashboard" className="text-left text-dark mb-2">
-              Vizualizare cereri
+            <Link to="/" className="text-left text-dark mb-2">
+              Cerere
             </Link>
           </li>
           <li>
-            <Link
-              to="/aplicanti-acceptati"
-              className="text-left text-dark mb-2"
-            >
-              Aplicanti acceptati
+            <Link to="/ajutorElev" className="text-left text-dark mb-2">
+              Ajutor
             </Link>
           </li>
           <li>
@@ -42,3 +39,5 @@ export default function DropDown() {
     </div>
   );
 }
+
+export default DropDownElev;

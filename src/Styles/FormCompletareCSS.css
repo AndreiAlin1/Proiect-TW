@@ -12,7 +12,7 @@
 }
 
 .formContainer:hover {
-  transform: scale(1.02); /* Efect de hover */
+  transform: scale(1.005); /* Efect de hover */
   cursor: pointer;
 }
 
