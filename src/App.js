@@ -17,6 +17,8 @@ import "./Styles/RaspunsCerere.css";
 import LoginScreen from "./Components/LoginScreen";
 import "./Styles/LoginScreen.css";
 import "./Pages/DashBoard.jsx";
+import "./Pages/ApprovedApplicants.jsx"
+import ApprovedApplicants from "./Pages/ApprovedApplicants.jsx";
 
 function App() {
   const [step, setStep] = useState(0);
@@ -42,6 +44,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/aplicanti-acceptati" element={<ApprovedApplicants />} />
         <Route
           path="/"
           element={

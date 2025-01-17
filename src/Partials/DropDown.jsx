@@ -15,8 +15,8 @@ export default function DropDown() {
             <nav className="side-menu">
                 <ul>
                     <li><Link to="/">Profil</Link></li>
-                    <li><Link to="/dashboard">Dashboard</Link></li>
-                    <li><Link to="#">Ajutor</Link></li>
+                    <li><Link to="/dashboard">Vizualizare cereri</Link></li>
+                    <li><Link to="/aplicanti-acceptati">Aplicanti acceptati</Link></li>
                     <li><Link to="#">Iesi din cont</Link></li>
                 </ul>
             </nav>
