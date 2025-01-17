@@ -21,6 +21,8 @@ import "./Pages/ApprovedApplicants.jsx";
 import ApprovedApplicants from "./Pages/ApprovedApplicants.jsx";
 import DropDownElev from "./Partials/DropDownElev.jsx";
 import ProfilElev from "./Pages/ProfilElev.jsx";
+import HelpStudent from "./Pages/HelpStudent.jsx";
+
 
 function App() {
   const [step, setStep] = useState(0);
@@ -59,6 +61,7 @@ function App() {
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/aplicanti-acceptati" element={<ApprovedApplicants />} />
+        <Route path="/help-student" element={<HelpStudent />} />
         <Route
           path="/profilElev"
           element={
