@@ -20,23 +20,34 @@ import "./Pages/DashBoard.jsx";
 import "./Pages/ApprovedApplicants.jsx";
 import ApprovedApplicants from "./Pages/ApprovedApplicants.jsx";
 import DropDownElev from "./Partials/DropDownElev.jsx";
-import ProfilElev from "./Pages/ProfilElev.jsx";
+import ProfilStudent from "./Pages/ProfilStudent.jsx";
 import HelpStudent from "./Pages/HelpStudent.jsx";
-
+import ProfilProfesor from "./Pages/ProfilProfesor.jsx";
 
 function App() {
+  //State uri pentru NavBar pentru a stii la ce pas suntem in trimiterea cererii ca elev
   const [step, setStep] = useState(0);
+
+  //State uri pentru componenta de Loggin
   const [loggedIn, setLoggedIn] = useState(false);
+
+  //State uri pentru datele elevului
   const [specializare, setSpecializare] = useState("");
   const [serie, setSerie] = useState("");
   const [grupa, setGrupa] = useState("");
   const [titluLucrare, setTitluLucrare] = useState("");
+
+  //State-uri pentru datele profesorului
+  const [numarElevi, setNumarElevi] = useState(0);
+  const [intervalStart, setIntervalStart] = useState(null); // Le vom folosi ca obiecte de tip Date
+  const [intervalEnd, setIntervalEnd] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Specializare:", specializare);
     console.log("Serie:", serie);
     console.log("Grupa:", grupa);
+    setNumarElevi((nr) => nr + 0); // N ARE SENS E PUS AICI CA SA NU MAI AM WARNING IN ES LINT CA setNumarElevi nu este folosit. VA FI STERS !!
   };
 
   function handleNext() {
@@ -65,7 +76,7 @@ function App() {
         <Route
           path="/profilElev"
           element={
-            <ProfilElev
+            <ProfilStudent
               onSubmit={handleSubmit}
               specializare={specializare}
               setSpecializare={setSpecializare}
@@ -75,7 +86,19 @@ function App() {
               setGrupa={setGrupa}
             />
           }
-        ></Route>
+        />
+        <Route
+          path="/profilProfesor"
+          element={
+            <ProfilProfesor
+              numarElevi={numarElevi}
+              intervalStart={intervalStart}
+              setIntervalStart={setIntervalStart}
+              intervalEnd={intervalEnd}
+              setIntervalEnd={setIntervalEnd}
+            />
+          }
+        />
         <Route
           path="/"
           element={

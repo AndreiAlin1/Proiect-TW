@@ -1,9 +1,9 @@
 import React from "react";
-import "../Styles/ProfilElev.css";
+import "../Styles/ProfilStudent.css";
 import DropDownElev from "../Partials/DropDownElev";
 import { useState } from "react";
 
-function ProfilElev({
+function ProfilStudent({
   onSubmit,
   specializare,
   setSpecializare,
@@ -88,4 +88,4 @@ function ProfilElev({
     </>
   );
 }
-export default ProfilElev;
+export default ProfilStudent;
