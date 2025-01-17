@@ -19,7 +19,7 @@ function ProfilElev({
     setShowPopup(true); // Afișează pop-up-ul
     setTimeout(() => {
       setShowPopup(false); // Ascunde pop-up-ul după 3 secunde
-    }, 3000);
+    }, 2000);
   }
   return (
     <>
