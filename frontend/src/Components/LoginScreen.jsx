@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 function LoginScreen({ onLoggingIn }) {
-  const [role, setRole] = useState("ELEV");
+  const [role, setRole] = useState("STUDENT");
 
   const handleLogin = () => {
     alert(`Autentificare simulată ca ${role}!`);
@@ -28,11 +28,11 @@ function LoginScreen({ onLoggingIn }) {
         <div className="roleSwitch">
           <span
             className={`roleOption ${
-              role === "ELEV" ? "activeOption" : "inactiveOption"
+              role === "PROFESOR" ? "activeOption" : "inactiveOption"
             }`}
-            onClick={() => setRole("ELEV")}
+            onClick={() => setRole("PROFESOR")}
           >
-            ELEV
+            PROFESOR
           </span>
           <span
             className={`roleOption ${
