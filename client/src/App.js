@@ -55,8 +55,14 @@ function App() {
   };
 
   const handleLogout = () => {
+    // Ștergem toate datele din sessionStorage
+    sessionStorage.clear();
+    // sau specific:
     sessionStorage.removeItem("userToken");
     sessionStorage.removeItem("userRole");
+    sessionStorage.removeItem("userName");
+    sessionStorage.removeItem("userEmail");
+    sessionStorage.removeItem("userId");
     setLoggedIn(false);
     setStep(0);
   };
@@ -127,7 +133,7 @@ function App() {
             path="/dashboard"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <Dashboard onLogout={handleLogout} />
               </ProtectedRoute>
             }
           />
@@ -135,7 +141,7 @@ function App() {
             path="/aplicanti-acceptati"
             element={
               <ProtectedRoute>
-                <ApprovedApplicants />
+                <ApprovedApplicants onLogout={handleLogout} />
               </ProtectedRoute>
             }
           />
@@ -150,6 +156,7 @@ function App() {
                 setSerie={setSerie}
                 grupa={grupa}
                 setGrupa={setGrupa}
+                onLogout={handleLogout}
               />
             }
           />
@@ -162,11 +169,18 @@ function App() {
                 setIntervalStart={setIntervalStart}
                 intervalEnd={intervalEnd}
                 setIntervalEnd={setIntervalEnd}
+                onLogout={handleLogout}
               />
             }
           />
-          <Route path="/help-student" element={<HelpStudent />} />
-          <Route path="/help-professor" element={<HelpProfesor />} />
+          <Route
+            path="/help-student"
+            element={<HelpStudent onLogout={handleLogout} />}
+          />
+          <Route
+            path="/help-professor"
+            element={<HelpProfesor onLogout={handleLogout} />}
+          />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
