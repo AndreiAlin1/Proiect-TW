@@ -24,12 +24,41 @@ function ProfilStudent({
     }
   }, []);
 
-  function handleFormSubmit(e) {
+  async function handleFormSubmit(e) {
     onSubmit(e);
-    setShowPopup(true);
+    setShowPopup(false);
     setTimeout(() => {
       setShowPopup(false);
     }, 2000);
+    try {
+      const studentId = sessionStorage.getItem("userId");
+      const studentInfo = 
+      {
+      major: specializare,
+      series: serie,
+      cls: grupa,
+      }
+      const response = await fetch(`http://localhost:3001/api/students/updateProfile/${studentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-type":"application/json"
+        },
+        body:JSON.stringify(studentInfo)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setShowPopup(false);
+        setTimeout(() => {
+          setShowPopup(true);
+        },2000);
+      } else {
+        console.error("Error response", data);
+      }
+    } catch(err) {
+      console.error("Error updating student info:", err);
+    }
   }
   return (
     <>

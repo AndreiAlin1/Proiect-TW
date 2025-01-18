@@ -68,9 +68,13 @@ const addStudentOAUTH = async (req, res) => {
     if (existing.length > 0) {
       await conn.commit();
       return res
-        .status(200)
-        .json(createResponse(true, "Student already exists", existing[0]));
-    }
+        .status(201)
+        .json(createResponse(true, "Existing student", {
+          studentId: id,
+          full_name,
+          email,
+        }));
+     }
 
     // Insert new student
     const [result] = await conn.execute(
@@ -127,6 +131,53 @@ const updateStudentDetails = async (req, res) => {
        SET serie = ?, grupa = ?, specializare = ?, id_lucrare = ?
        WHERE id = ?`,
       [series, cls, major, lucrare, id]
+    );
+
+    if (result.affectedRows === 0) {
+      await conn.rollback();
+      return res.status(404).json(createResponse(false, "Student not found"));
+    }
+
+    await conn.commit();
+
+    res.status(200).json(
+      createResponse(true, "Student details updated successfully", {
+        id,
+        series,
+        cls,
+        major
+      })
+    );
+  } catch (err) {
+    await conn.rollback();
+    console.error("Error in updateStudentDetails:", err);
+    res.status(500).json(
+      createResponse(false, "Error updating student details", null, err.message)
+    );
+  } finally {
+    conn.release();
+  }
+};
+
+
+const updateStudentProfile = async (req, res) => {
+  const conn = await pool.getConnection();
+
+  try {
+    const { id } = req.params;
+    const { major, series, cls } = req.body;  // Changed to match frontend
+
+    if (!series || !cls || !major) {
+      throw new Error("Missing required fields");
+    }
+
+    await conn.beginTransaction();
+
+    const [result] = await conn.execute(
+      `UPDATE student 
+       SET serie = ?, grupa = ?, specializare = ?
+       WHERE id = ?`,
+      [series, cls, major, id]
     );
 
     if (result.affectedRows === 0) {
@@ -218,6 +269,7 @@ const checkStudentByEmail = async (email) => {
 module.exports = {
   addStudentOAUTH,
   updateStudentDetails,
+  updateStudentProfile,
   getStudentThesis,
   checkStudentByEmail,
 };

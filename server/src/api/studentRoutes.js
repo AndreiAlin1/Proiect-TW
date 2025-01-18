@@ -4,6 +4,7 @@ const router = express.Router();
 const {
     addStudentOAUTH,
     updateStudentDetails,
+    updateStudentProfile,
     getStudentThesis
 } = require('../controllers/studentController');
 
@@ -14,7 +15,10 @@ router.post('/oauth', addStudentOAUTH);
 // Route for updating student details
 router.put('/updateInfo/:id', updateStudentDetails);
 
+router.put('/updateProfile/:id',updateStudentProfile);
+
 // Route for retrieving student thesis information
 router.get('/:id/thesis', getStudentThesis);
+
 
 module.exports = router;
