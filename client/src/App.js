@@ -91,15 +91,15 @@ function App() {
       {step === 2 && <AcceptareColaborare />}
       {step === 3 && <RaspunsCerere onTrimiteDinNou={handleTrimiteDinNou} />}
       <div className="butoane">
-        <button 
-          className="btn btn-secondary me-2" 
+        <button
+          className="btn btn-secondary me-2"
           onClick={handlePrev}
           disabled={step === 0}
         >
           Previous
         </button>
-        <button 
-          className="btn btn-primary" 
+        <button
+          className="btn btn-primary"
           onClick={handleNext}
           disabled={step === 3}
         >
@@ -113,32 +113,32 @@ function App() {
     <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
       <Router>
         <Routes>
-          <Route 
-            path="/" 
+          <Route
+            path="/"
             element={
               <ProtectedRoute>
                 <StepContent />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/dashboard" 
+          <Route
+            path="/dashboard"
             element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/aplicanti-acceptati" 
+          <Route
+            path="/aplicanti-acceptati"
             element={
               <ProtectedRoute>
                 <ApprovedApplicants />
               </ProtectedRoute>
-            } 
+            }
           />
-          <Route 
-            path="/profilElev" 
+          <Route
+            path="/profilElev"
             element={
               <ProfilStudent
                 onSubmit={handleSubmit}
@@ -151,8 +151,8 @@ function App() {
               />
             }
           />
-          <Route 
-            path="/profilProfesor" 
+          <Route
+            path="/profilProfesor"
             element={
               <ProfilProfesor
                 numarElevi={numarElevi}
@@ -163,14 +163,8 @@ function App() {
               />
             }
           />
-          <Route 
-            path="/help-student" 
-            element={<HelpStudent />} 
-          />
-          <Route 
-            path="/help-professor" 
-            element={<HelpProfesor />} 
-          />
+          <Route path="/help-student" element={<HelpStudent />} />
+          <Route path="/help-professor" element={<HelpProfesor />} />
         </Routes>
       </Router>
     </GoogleOAuthProvider>
