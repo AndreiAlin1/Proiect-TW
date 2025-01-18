@@ -31,7 +31,7 @@ async function createTables(conn) {
   // Exemplu de creare tabel pentru studenți
   const createStudentsTableQuery = `
     CREATE TABLE IF NOT EXISTS student (
-      id INT AUTO_INCREMENT PRIMARY KEY,
+      id VARCHAR(255) PRIMARY KEY,
       nume_complet VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL UNIQUE,
       imagine_profil VARCHAR(255),
@@ -60,10 +60,8 @@ async function createTables(conn) {
   CREATE TABLE IF NOT EXISTS lucrare (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titlu_lucrare VARCHAR(255),
-    descriere TEXT,
     data_incarcare TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    locatie_pdf VARCHAR(255),
-    stare enum('In evaluare','Aprobată','Respinsă'),
+    stare enum('In evaluare','Aprobată','Respinsă', 'Neîncărcată'),
     id_student VARCHAR(255),
     id_profesor VARCHAR(255),
     INDEX (id_student),

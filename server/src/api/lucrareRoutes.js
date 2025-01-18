@@ -3,11 +3,13 @@ const router = express.Router();
 const thesisController = require('../controllers/lucrareController');
 
 
-router.post('/', thesisController.addThesis);
+router.post('/insertThesis/:id', thesisController.addThesis);
 
-router.get('/', thesisController.getAllTheses);
+router.get('/getAllTheses', thesisController.getAllTheses);
 
-router.get('/:id', thesisController.getThesisById);
+router.get('/getThesis/:id', thesisController.getThesisById);
+
+router.get('getThesisByStudent/:id', thesisController.getThesisByStudentId);
 
 router.patch('/:id/status', thesisController.updateThesisStatus);
 

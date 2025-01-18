@@ -52,7 +52,6 @@ function LoginScreen({ onLoggingIn }) {
 
             onLoggingIn();
             navigate(role === "STUDENT" ? "/profilElev" : "/profilProfesor");
-
         } catch (err) {
             console.error("Login error:", err);
             setError(err.message || "An error occurred during login. Please try again.");

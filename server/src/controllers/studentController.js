@@ -17,7 +17,7 @@ const createResponse = (success, message, data = null, error = null) => ({
 const validateStudentData = (data) => {
   const { id, full_name, email } = data;
   if (!id || !full_name || !email) {
-    throw new Error("Missing required fields: id, full_name, email");
+    throw new Error("Missing required fields");
   }
   if (!email.includes("@")) {
     throw new Error("Invalid email format");
@@ -74,9 +74,9 @@ const addStudentOAUTH = async (req, res) => {
 
     // Insert new student
     const [result] = await conn.execute(
-      `INSERT INTO student (nume_complet, email, imagine_profil)
-            VALUES (?, ?, ?)`,
-      [full_name, email, profile_picture]
+      `INSERT INTO student (id,nume_complet, email, imagine_profil)
+            VALUES (?, ?, ?, ?)`,
+      [id,full_name, email, profile_picture]
     );
 
     await conn.commit();
@@ -114,21 +114,19 @@ const updateStudentDetails = async (req, res) => {
 
   try {
     const { id } = req.params;
-    const { series, cls, major, acces_token } = req.body;
+    const { major, series, cls, lucrare } = req.body;  // Changed to match frontend
 
-    // Validate input
     if (!series || !cls || !major) {
-      throw new Error("Missing required fields: series, cls, major");
+      throw new Error("Missing required fields");
     }
 
     await conn.beginTransaction();
 
-    // Update student details
     const [result] = await conn.execute(
       `UPDATE student 
-            SET serie = ?, grup = ?, specializare = ?, token_acces = ?, data_actualizare = NOW()
-            WHERE id = ?`,
-      [series, cls, major, acces_token, id]
+       SET serie = ?, grupa = ?, specializare = ?, id_lucrare = ?
+       WHERE id = ?`,
+      [series, cls, major, lucrare, id]
     );
 
     if (result.affectedRows === 0) {
@@ -143,27 +141,19 @@ const updateStudentDetails = async (req, res) => {
         id,
         series,
         cls,
-        major,
+        major
       })
     );
   } catch (err) {
     await conn.rollback();
     console.error("Error in updateStudentDetails:", err);
-    res
-      .status(500)
-      .json(
-        createResponse(
-          false,
-          "Error updating student details",
-          null,
-          err.message
-        )
-      );
+    res.status(500).json(
+      createResponse(false, "Error updating student details", null, err.message)
+    );
   } finally {
     conn.release();
   }
 };
-
 /**
  * Get student thesis information
  */

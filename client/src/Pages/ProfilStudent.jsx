@@ -16,9 +16,9 @@ function ProfilStudent({
 
   function handleFormSubmit(e) {
     onSubmit(e);
-    setShowPopup(true); // Afișează pop-up-ul
+    setShowPopup(true); 
     setTimeout(() => {
-      setShowPopup(false); // Ascunde pop-up-ul după 3 secunde
+      setShowPopup(false); 
     }, 2000);
   }
   return (

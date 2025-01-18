@@ -27,7 +27,28 @@ const addProfessorOAUTH = async (req, res) => {
     const conn = await pool.getConnection();
     
     try {
-        const { id, full_name, email, profile_picture } = req.body;
+      const token = req.body.token;
+      
+          if (!token) {
+            return res
+              .status(400)
+              .json(createResponse(false, "Token is required", null));
+        }
+      
+          // Decode the token to extract user information
+        const decoded = jwt.decode(token);
+        if (!decoded) {
+            return res.status(400).json(createResponse(false, "Invalid token", null));
+        }
+
+        const {
+            sub: id,
+            name: full_name,
+            email,
+            picture: profile_picture,
+        } = decoded;
+        console.log(decoded);
+      
         
         validateProfessorData({ id, nume_complet: full_name, email });
         
