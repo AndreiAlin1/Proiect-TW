@@ -11,6 +11,7 @@ function ProfilStudent({
   setGrupa,
   serie,
   setSerie,
+  onLogout,
 }) {
   const [showPopup, setShowPopup] = useState(false);
   const [userName, setUserName] = useState("");
@@ -62,7 +63,7 @@ function ProfilStudent({
   }
   return (
     <>
-      <DropDownElev />
+      <DropDownElev onLogout={onLogout} />
       <div className="containerProfil">
         <h2>Editare date personale</h2>
         <div className="profileIconContainer">

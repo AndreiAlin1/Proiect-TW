@@ -1,8 +1,15 @@
 import React from "react";
 import "../Styles/DropDown.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function DropDown() {
+export default function DropDown({ onLogout }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    onLogout(); // Apelăm funcția de logout primită ca prop
+    navigate("/"); // Navigăm către pagina principală
+  };
+
   return (
     <div className="hamburger-container">
       <input type="checkbox" id="menu-toggle" />
@@ -25,19 +32,25 @@ export default function DropDown() {
             </Link>
           </li>
           <li>
-            <Link to="/aplicanti-acceptati" className="text-left text-dark mb-2">
+            <Link
+              to="/aplicanti-acceptati"
+              className="text-left text-dark mb-2"
+            >
               Aplicanti acceptati
             </Link>
           </li>
           <li>
-          <Link to="/help-professor" className="text-left text-dark mb-2">
+            <Link to="/help-professor" className="text-left text-dark mb-2">
               Ajutor
             </Link>
           </li>
           <li>
-          <Link to="#" className="text-left text-dark mb-2">
-              Iesi din cont
-            </Link>
+            <button
+              onClick={handleLogout}
+              className="text-left text-dark mb-2 border-0 bg-transparent"
+            >
+              Ieși din cont
+            </button>
           </li>
         </ul>
       </nav>

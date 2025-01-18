@@ -8,6 +8,7 @@ function ProfilProfesor({
   setIntervalStart,
   intervalEnd,
   setIntervalEnd,
+  onLogout,
 }) {
   const [showPopup, setShowPopup] = useState(false);
   const [userName, setUserName] = useState("");
@@ -31,7 +32,7 @@ function ProfilProfesor({
 
   return (
     <>
-      <DropDown />
+      <DropDown onLogout={onLogout} />
       <div className="containerProfil">
         <h2>Editare date profesor</h2>
         <div className="profileIconContainer">
