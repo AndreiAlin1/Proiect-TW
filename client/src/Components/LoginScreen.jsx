@@ -9,7 +9,7 @@ function LoginScreen({ onLoggingIn }) {
     const navigate = useNavigate();
 
     const handleLoginSuccess = async (response) => {
-        setLoading(true);
+        setLoading(true);    
         setError(null);
         const token = response.credential;
 

@@ -1,5 +1,7 @@
 // studentController.js
 const pool = require('../config/db');
+const jwt = require('jsonwebtoken');
+
 
 // Helper function for standardized response format
 const createResponse = (success, message, data = null, error = null) => ({
@@ -27,7 +29,21 @@ const addStudentOAUTH = async (req, res) => {
     const conn = await pool.getConnection();
     
     try {
-        const { id, full_name, email, profile_picture } = req.body;
+        const token = req.body.token;
+
+        if (!token) {
+            return res.status(400).json(createResponse(false, 'Token is required', null));
+        }
+
+        // Decode the token to extract user information
+        const decoded = jwt.decode(token);
+        if (!decoded) {
+            return res.status(400).json(createResponse(false, 'Invalid token', null));
+        }
+
+        // Extract user data from the decoded token
+        const { sub: id, name: full_name, email, picture: profile_picture } = decoded;
+        console.log(decoded)
         
         // Validate input data
         validateStudentData({ id, full_name, email });
@@ -49,8 +65,8 @@ const addStudentOAUTH = async (req, res) => {
 
         // Insert new student
         const [result] = await conn.execute(
-            `INSERT INTO student (id, nume_complet, email, imagine_profil, data_creare)
-            VALUES (?, ?, ?, ?, NOW())`,
+            `INSERT INTO student (id, nume_complet, email, imagine_profil)
+            VALUES (?, ?, ?, ?)`,
             [id, full_name, email, profile_picture]
         );
 
@@ -143,7 +159,7 @@ const getStudentThesis = async (req, res) => {
                 l.id AS lucrare_id,
                 l.titlu,
                 l.descriere,
-                l.data_creare AS teza_data_creare
+                l.data_incarcare
             FROM student s
             LEFT JOIN lucrare l ON s.id_lucrare = l.id
             WHERE s.id = ?`,
