@@ -25,7 +25,7 @@ function DropDownElev() {
             </Link>
           </li>
           <li>
-            <Link to="/ajutorElev" className="text-left text-dark mb-2">
+            <Link to="/help-student" className="text-left text-dark mb-2">
               Ajutor
             </Link>
           </li>

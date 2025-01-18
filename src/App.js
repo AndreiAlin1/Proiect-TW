@@ -23,6 +23,7 @@ import DropDownElev from "./Partials/DropDownElev.jsx";
 import ProfilStudent from "./Pages/ProfilStudent.jsx";
 import HelpStudent from "./Pages/HelpStudent.jsx";
 import ProfilProfesor from "./Pages/ProfilProfesor.jsx";
+import HelpProfesor from "./Pages/HelpProfesor.jsx";
 
 function App() {
   //State uri pentru NavBar pentru a stii la ce pas suntem in trimiterea cererii ca elev
@@ -73,6 +74,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/aplicanti-acceptati" element={<ApprovedApplicants />} />
         <Route path="/help-student" element={<HelpStudent />} />
+        <Route path="/help-professor" element={<HelpProfesor />} />
         <Route
           path="/profilElev"
           element={

@@ -1,18 +1,18 @@
 import React from "react";
-import DropDown from "../Partials/DropDown";
 import "../Styles/HelpStudent.css";
+import DropDownElev from "../Partials/DropDownElev";
 
 export default function HelpStudent() {
     return (
         <div>
             <h1>Help</h1>
-            <DropDown />
+            <DropDownElev />
             <div>
                 <h1 className="title-flux">Inițializare</h1>
                 <h1 className="title">1. Accesarea contului</h1>
                 <p className="text">Autentificarea în cadrul acestei platformei de asociere pentru licență se realizează prin intermediul contului tău instituțional oferit de către A.S.E. Platforma este destinată atât studenților care doresc să se înscrie sesiunea de licență a anului universitar curent, cât și profesorilor coordonatori.</p>
                 <h1 className="title">2. Completarea datelor personale</h1>
-                <p className="text">Completează-ți datele personale în pagina de profil, din meniul din dreapta, dând click pe iconița de meniu. Este necesară completarea atât a specializării pentru a putea vizualiza profesorii disponibili, cât și a restului datelor personale pentru identificare.</p>
+                <p className="text">Completează-ți datele personale în pagina de profil, din meniul din stanga, dând click pe iconița de meniu. Este necesară completarea atât a specializării pentru a putea vizualiza profesorii disponibili, cât și a restului datelor personale pentru identificare.</p>
             </div>
             <div>
                 <h1 className="title-flux">Fluxul aplicației - I. Solicitare colaborare.</h1>

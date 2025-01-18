@@ -12,7 +12,7 @@ function LoginScreen({ onLoggingIn }) {
   return (
     <div className="loginContainer">
       <h1 className="text-center text-light mb-4">
-        Inscriere sustinere licenta
+        Inscriere sustinere disertatie.
       </h1>
       <div className="text-center">
         <i

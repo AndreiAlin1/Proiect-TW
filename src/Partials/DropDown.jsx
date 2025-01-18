@@ -25,21 +25,18 @@ export default function DropDown() {
             </Link>
           </li>
           <li>
-            <Link
-              to="/aplicanti-acceptati"
-              className="text-left text-dark mb-2"
-            >
+            <Link to="/aplicanti-acceptati" className="text-left text-dark mb-2">
               Aplicanti acceptati
             </Link>
           </li>
           <li>
-            <Link to="#" className="text-left text-dark mb-2">
-              Iesi din cont
+          <Link to="/help-professor" className="text-left text-dark mb-2">
+              Ajutor
             </Link>
           </li>
           <li>
-            <Link to="/help-student" className="text-left text-dark mb-2">
-              Ajutor
+          <Link to="#" className="text-left text-dark mb-2">
+              Iesi din cont
             </Link>
           </li>
         </ul>
