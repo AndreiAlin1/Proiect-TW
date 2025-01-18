@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Styles/ProfilProfesor.css";
 import DropDown from "../Partials/DropDown";
 
@@ -10,6 +10,16 @@ function ProfilProfesor({
   setIntervalEnd,
 }) {
   const [showPopup, setShowPopup] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const storedName = sessionStorage.getItem("userName");
+    console.log("Retrieved username:", storedName); // verificăm ce recuperăm
+
+    if (storedName) {
+      setUserName(storedName);
+    }
+  }, []);
 
   function handleFormSubmit(e) {
     e.preventDefault(); // Previne refresh-ul paginii
@@ -27,7 +37,7 @@ function ProfilProfesor({
         <div className="profileIconContainer">
           <i className="bi bi-person-circle profileIcon"></i>
         </div>
-        <h1>Nume Profesor</h1>
+        <h1>{userName}</h1>
         <form className="formContainer" onSubmit={handleFormSubmit}>
           <div className="formGroup">
             <label id="labelProfesor">

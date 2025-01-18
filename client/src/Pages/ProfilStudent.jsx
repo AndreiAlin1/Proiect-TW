@@ -1,7 +1,7 @@
 import React from "react";
 import "../Styles/ProfilStudent.css";
 import DropDownElev from "../Partials/DropDownElev";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function ProfilStudent({
   onSubmit,
@@ -13,12 +13,22 @@ function ProfilStudent({
   setSerie,
 }) {
   const [showPopup, setShowPopup] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const storedName = sessionStorage.getItem("userName");
+    console.log("Retrieved username:", storedName); // verificăm ce recuperăm
+
+    if (storedName) {
+      setUserName(storedName);
+    }
+  }, []);
 
   function handleFormSubmit(e) {
     onSubmit(e);
-    setShowPopup(true); 
+    setShowPopup(true);
     setTimeout(() => {
-      setShowPopup(false); 
+      setShowPopup(false);
     }, 2000);
   }
   return (
@@ -29,7 +39,7 @@ function ProfilStudent({
         <div className="profileIconContainer">
           <i className="bi bi-person-circle profileIcon"></i>
         </div>
-        <h1>Nume User</h1>
+        <h1>{userName}</h1>
 
         <form onSubmit={handleFormSubmit} className="formContainer">
           <div className="formGroup">
