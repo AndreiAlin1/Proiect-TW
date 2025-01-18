@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import React from "react";
 import "../Styles/DropDownElev.css";
 
-function DropDownElev() {
+function DropDownElev({ onLogout }) {
   return (
     <div className="hamburger-container">
       <input type="checkbox" id="menu-toggle" />
@@ -30,7 +30,11 @@ function DropDownElev() {
             </Link>
           </li>
           <li>
-            <Link to="#" className="text-left text-dark mb-2">
+            <Link
+              to="#"
+              className="text-left text-dark mb-2"
+              onClick={onLogout}
+            >
               Iesi din cont
             </Link>
           </li>

@@ -24,6 +24,7 @@ import "./Styles/RaspunsCerere.css";
 import "./Styles/LoginScreen.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import DropDownElev from "./Partials/DropDownElev";
 
 function App() {
   const [step, setStep] = useState(0);
@@ -73,7 +74,8 @@ function App() {
 
   const StepContent = () => (
     <>
-      <NavBar stepProp={step} onLogout={handleLogout} />
+      <DropDownElev onLogout={handleLogout}></DropDownElev>
+      <NavBar stepProp={step} />
       {step === 0 && (
         <FormCompletare
           onSubmit={handleSubmit}

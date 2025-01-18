@@ -39,7 +39,8 @@ async function createTables(conn) {
       grupa VARCHAR(255),
       specializare VARCHAR(255),
       token_acces VARCHAR(255),
-      id_lucrare INT
+      id_lucrare INT,
+      INDEX(id_lucrare)
     );
   `;
 
@@ -55,11 +56,27 @@ async function createTables(conn) {
     );
   `;
 
+  const createLucrareTableQuery = `
+  CREATE TABLE IF NOT EXISTS lucrare (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titlu_lucrare VARCHAR(255),
+    descriere TEXT,
+    data_incarcare TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    locatie_pdf VARCHAR(255),
+    stare enum('In evaluare','Aprobată','Respinsă'),
+    id_student VARCHAR(255),
+    id_profesor VARCHAR(255),
+    INDEX (id_student),
+    INDEX(id_profesor)
+  );
+  `;
   try {
     await conn.query(createStudentsTableQuery);
-    console.log("Tabelul 'student' a fost creat.");
+    console.log("Tabela 'student' a fost creata.");
     await conn.query(createProfesoriTableQuery);
-    console.log("Tabelul 'profesor' a fost creat");
+    console.log("Tabela 'profesor' a fost creata");
+    await conn.query(createLucrareTableQuery);
+    console.log("Tabela 'lucrare' a fost creata");
   } catch (error) {
     console.error("Eroare la crearea tabelului 'students':", error);
   }

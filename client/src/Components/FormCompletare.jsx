@@ -40,11 +40,11 @@ function FormCompletare({
         </div>
 
         <div className="formGroup">
-          <label htmlFor="grupa">Titlu lucrare licenta:</label>
+          <label htmlFor="lucrare">Titlu lucrare licenta:</label>
           <input
-            id="grupa"
+            id="lucrare"
             type="text"
-            value={titluLucrare}
+            value={titluLucrare || ""}
             onChange={(e) => setTitluLucrare(e.target.value)}
             placeholder="Ex: Computer cuantic"
             required
@@ -69,7 +69,7 @@ function FormCompletare({
           <input
             id="grupa"
             type="number"
-            value={grupa}
+            value={grupa || ""}
             onChange={(e) => setGrupa(e.target.value)}
             placeholder="Ex: 101"
             required
