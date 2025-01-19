@@ -35,3 +35,15 @@
   background-color: #b1000c;
   color: white;
 }
+
+.download {
+  width: 90px;
+  border: 1px solid black;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.download:hover {
+  background-color: #007bff;
+  color: white;
+}

@@ -12,6 +12,7 @@ export default function Card({ name }) {
             <div className="buttons">
                 <button className="confirm">Accepta</button>
                 <button className="reject">Refuza</button>
+                <button className="download">Download</button>
             </div>
         </div>
     );
