@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, memo, useCallback } from "react";
 
 function FormCompletare({
   onSubmit,
@@ -14,11 +14,28 @@ function FormCompletare({
   const [showPopup, setShowPopup] = useState(false);
   const [error, setError] = useState(null);
 
+  const [formData, setFormData] = useState({
+    specializare: "",
+    titluLucrare: "",
+    serie: "",
+    grupa: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "serie" ? value.toUpperCase() : value,
+    }));
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
-    onSubmit(e);
+    onSubmit(formData);
+    console.log("Form data at submit:", formData);
 
     const studentId = sessionStorage.getItem("userId");
+    console.log("Student ID:", studentId);
 
     // Step 1: Add Thesis
     try {
@@ -27,7 +44,7 @@ function FormCompletare({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ titlu_lucrare: titluLucrare }),
+        body: JSON.stringify({ titlu_lucrare: formData.titluLucrare }),
       });
 
       const data = await response.json();
@@ -54,9 +71,9 @@ function FormCompletare({
     try {
       const thesisId = sessionStorage.getItem("thesisId");
       const studentInfo = {
-        major: specializare,
-        series: serie,
-        cls: grupa,
+        major: formData.specializare,
+        series: formData.serie,
+        cls: formData.grupa,
         lucrare: thesisId,
       };
 
@@ -91,8 +108,9 @@ function FormCompletare({
           <label htmlFor="specializare">Specializare:</label>
           <select
             id="specializare"
-            value={specializare}
-            onChange={(e) => setSpecializare(e.target.value)}
+            name="specializare"
+            value={formData.specializare}
+            onChange={handleChange}
             required
           >
             <option value="">Selectează</option>
@@ -106,9 +124,10 @@ function FormCompletare({
           <label htmlFor="grupa">Titlu lucrare licenta:</label>
           <input
             id="grupa"
+            name="titluLucrare"
             type="text"
-            value={titluLucrare}
-            onChange={(e) => setTitluLucrare(e.target.value)}
+            value={formData.titluLucrare}
+            onChange={handleChange}
             placeholder="Ex: Computer cuantic"
             required
           />
@@ -117,9 +136,10 @@ function FormCompletare({
           <label htmlFor="serie">Serie:</label>
           <input
             id="serie"
+            name="serie"
             type="text"
-            value={serie}
-            onChange={(e) => setSerie(e.target.value.toUpperCase())}
+            value={formData.serie}
+            onChange={handleChange}
             maxLength="1"
             pattern="[A-Za-z]"
             placeholder="Ex: A"
@@ -131,9 +151,10 @@ function FormCompletare({
           <label htmlFor="grupa">Grupa:</label>
           <input
             id="grupa"
+            name="grupa"
             type="number"
-            value={grupa}
-            onChange={(e) => setGrupa(e.target.value)}
+            value={formData.grupa}
+            onChange={handleChange}
             placeholder="Ex: 101"
             required
           />
@@ -158,4 +179,4 @@ function FormCompletare({
   );
 }
 
-export default FormCompletare;
+export default memo(FormCompletare);

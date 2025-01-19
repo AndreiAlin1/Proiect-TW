@@ -2,10 +2,11 @@ const pool = require('../config/db');
 
 const addThesis = async (req, res) => {
     try {
+        console.log("Se apeleaza addThesis")
       const studentId = req.params.id;  // Corrected params access
       const { titlu_lucrare } = req.body;  // Corrected body access
       
-      const stare = 'Neîncarcată';
+      const stare = 'In evaluare';
       const data_incarcare = new Date();
   
       const [result] = await pool.execute(
@@ -18,6 +19,7 @@ const addThesis = async (req, res) => {
         [titlu_lucrare, stare, data_incarcare, studentId]
       );
   
+      console.log("Stare"+result.stare)
       res.status(201).json({ 
         message: 'Thesis added successfully!', 
         thesisId: result.insertId 

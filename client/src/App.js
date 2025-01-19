@@ -67,11 +67,10 @@ function App() {
     setStep(0);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Specializare:", specializare);
-    console.log("Serie:", serie);
-    console.log("Grupa:", grupa);
+  const handleSubmit = (formData) => {
+    console.log("Specializare:", formData.specializare);
+    console.log("Serie:", formData.serie);
+    console.log("Grupa:", formData.grupa);
   };
 
   const ProtectedRoute = ({ children }) => {
