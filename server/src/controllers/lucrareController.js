@@ -6,7 +6,7 @@ const addThesis = async (req, res) => {
       const studentId = req.params.id;  // Corrected params access
       const { titlu_lucrare } = req.body;  // Corrected body access
       
-      const stare = 'In evaluare';
+      const stare = 'Neîncarcată';
       const data_incarcare = new Date();
   
       const [result] = await pool.execute(
@@ -83,7 +83,7 @@ const updateThesisStatus = async (req, res) => {
     const { id } = req.params;
     const { stare } = req.body;
 
-    const validStates = ['In evaluare', 'Aprobată', 'Respinsă'];
+    const validStates = ['In evaluare', 'Aprobată', 'Respinsă',"Neîncărcată"];
     if (!validStates.includes(stare)) {
         return res.status(400).json({ 
             message: 'Invalid status. Must be one of: In evaluare, Aprobată, Respinsă' 
@@ -94,6 +94,26 @@ const updateThesisStatus = async (req, res) => {
         const [result] = await pool.execute(
             'UPDATE lucrare SET stare = ? WHERE id = ?', 
             [stare, id]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Thesis not found or status unchanged' });
+        }
+
+        res.status(200).json({ message: 'Thesis status updated successfully' });
+    } catch (err) {
+        res.status(500).json({ message: 'Error updating thesis status', error: err.message });
+    }
+};
+
+const setThesisProf = async (req, res) => {
+    const { id } = req.params;
+    const { stare,id_prof } = req.body;
+
+    try {
+        const [result] = await pool.execute(
+            'UPDATE lucrare SET stare = ?, id_profesor = ? WHERE id = ?', 
+            [stare, id_prof,id]
         );
 
         if (result.affectedRows === 0) {
@@ -131,5 +151,6 @@ module.exports = {
     getThesisById,
     getThesisByStudentId,
     updateThesisStatus,
+    setThesisProf,
     deleteThesis,
 };
