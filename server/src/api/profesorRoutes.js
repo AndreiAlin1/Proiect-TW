@@ -11,7 +11,7 @@ const {
 const authMiddleware = require('../middleware/auth');
 
 router.get('/getAllProf', getAllProfessors);
-router.get('/professor/getProf', getProfessorById);
+router.get('/getProf/:id', getProfessorById);
 router.put('/:id', authMiddleware, updateProfessorDetails);
 router.delete('/:id', authMiddleware, deleteProfessor);
 

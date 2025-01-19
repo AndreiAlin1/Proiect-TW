@@ -26,11 +26,12 @@ const getProf = async () => {
 
 function AlegeProfesor() {
   const [professors, setProfessors] = useState([]); // Array of all professors
-  const [selectedProfesor, setSelectedProfesor] = useState(""); // Selected professor
+  const [selectedProfesor, setSelectedProfesor] = useState(null);
   const [isSent, setIsSent] = useState(false);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [respins, setIsRespins] = useState(false);
+
 
   useEffect(() => {
     const loadProf = async () => {
@@ -54,25 +55,50 @@ function AlegeProfesor() {
     loadProf();
   }, []);
 
-  function handleIsSent() {
-    setIsSent(true);
-    //Aici vom trimite apoi spre baza de date profesorul ales
+  async function handleIsSent() {
+  setIsSent(true);
+  try {
+    const thesisId = sessionStorage.getItem("thesisId");   
+     const obj = {
+      id_prof: selectedProfesor.id,
+      stare: "In evaluare"
+    }
+    const response = await fetch(`http://localhost:3001/api/thesis/setThesisProf/${thesisId}`, {
+      method: "PATCH",  // schimbat în PATCH
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj)
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || "Network response is not ok!");
+    }
+  } catch (err) {
+    console.log("Error updating professor:", err);
+    throw err;
   }
+}
 
   function handleRespingereColaborare() {
-    setIsRespins(true);
+    setIsSent(false);
+    setSelectedProfesor(null); // schimbat din ""
+    setIsRespins(false);
   }
 
   function handleIntoarceLaAles() {
     setIsSent(false);
-    setSelectedProfesor("");
+    setSelectedProfesor(null); // schimbat din ""
     setIsRespins(false);
   }
+
 
   if (isLoading) {
     return <div>Se încarcă...</div>;
   }
 
+  
   if (error) {
     return <div className="error-message">{error}</div>;
   }
@@ -83,7 +109,7 @@ function AlegeProfesor() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (selectedProfesor !== "") handleIsSent();
+            if (selectedProfesor !== null) handleIsSent(); 
           }}
           className="profesorContainer"
         >
@@ -93,13 +119,16 @@ function AlegeProfesor() {
             </label>
             <select
               id="profesor"
-              value={selectedProfesor}
-              onChange={(e) => setSelectedProfesor(e.target.value)}
+              value={selectedProfesor ? selectedProfesor.id : ""}
+              onChange={(e) => {
+                const selected = professors.find(prof => prof.id.toString() === e.target.value);
+                setSelectedProfesor(selected);
+                }}
               required
             >
               <option value="">Selecteaza</option>
               {professors.map((prof) => (
-                <option key={prof.id} value={prof.nume_complet}>
+                <option key={prof.id} value={prof.id}>
                   {prof.nume_complet}
                 </option>
               ))}
@@ -120,7 +149,7 @@ function AlegeProfesor() {
               <i className="bi bi-clock"></i>
             </span>
             <p id="parafInstiintare">
-              {selectedProfesor} a fost instiintat. Se asteapta un raspuns.
+            {selectedProfesor.nume_complet} a fost instiintat. Se asteapta un raspuns.
             </p>
           </div>
           <button onClick={handleRespingereColaborare}>Respingere</button>

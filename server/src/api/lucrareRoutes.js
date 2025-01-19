@@ -13,6 +13,8 @@ router.get('getThesisByStudent/:id', thesisController.getThesisByStudentId);
 
 router.patch('/:id/status', thesisController.updateThesisStatus);
 
+router.patch('/setThesisProf/:id', thesisController.setThesisProf);
+
 router.delete('/:id', thesisController.deleteThesis);
 
 module.exports = router;
