@@ -15,49 +15,155 @@ function ProfilStudent({
 }) {
   const [showPopup, setShowPopup] = useState(false);
   const [userName, setUserName] = useState("");
+  const [formData, setFormData] = useState({
+    specializare: "",
+    titluLucrare: "",
+    serie: "",
+    grupa: "",
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+
+    // Special handling for serie field - convert to uppercase and limit to letters
+    if (id === "serie") {
+      const upperValue = value.toUpperCase();
+      if (/^[A-Z]?$/.test(upperValue)) {
+        // Only allow single letters
+        setFormData((prev) => ({ ...prev, serie: upperValue }));
+      }
+      return;
+    }
+
+    // Special handling for grupa field - only allow numbers
+    if (id === "grupa") {
+      if (/^\d*$/.test(value)) {
+        // Only allow digits
+        setFormData((prev) => ({ ...prev, grupa: value }));
+      }
+      return;
+    }
+
+    // Handle other fields normally
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
 
   useEffect(() => {
     const storedName = sessionStorage.getItem("userName");
     console.log("Retrieved username:", storedName); // verificăm ce recuperăm
+    const titluDinSession = sessionStorage.getItem("titluLucrare");
+    if (titluDinSession) {
+      setFormData((prevData) => ({
+        ...prevData,
+        titluLucrare: titluDinSession,
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        titluLucrare: "Nu a fost setat inca",
+      }));
+    }
 
     if (storedName) {
       setUserName(storedName);
     }
   }, []);
 
+  useEffect(() => {
+    const fetchStudentInfo = async () => {
+      const studentId = sessionStorage.getItem("userId"); // Presupun că ai ID-ul studentului în sessionStorage
+      console.log("Student ID:", studentId);
+
+      if (studentId) {
+        try {
+          const response = await fetch(
+            `http://localhost:3001/api/students/getStudentInfo/${encodeURIComponent(
+              studentId
+            )}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch student info");
+          }
+
+          const data = await response.json();
+
+          if (data.success && data.studentInfo) {
+            console.log("Received student info:", data.studentInfo);
+
+            setFormData((prevData) => ({
+              ...prevData,
+              specializare: data.studentInfo.specializare || "",
+              serie: data.studentInfo.serie || "",
+              grupa: data.studentInfo.grupa || "",
+            }));
+          } else {
+            setFormData((prevData) => ({
+              ...prevData,
+              specializare: "",
+              serie: "",
+              grupa: "",
+            }));
+            console.error(
+              "No student info found or other error:",
+              data.message
+            );
+          }
+        } catch (err) {
+          console.error("Error fetching student info:", err);
+          setFormData({
+            specializare: "",
+            titluLucrare: "",
+            serie: "",
+            grupa: "",
+          });
+        }
+      }
+    };
+    fetchStudentInfo();
+  }, []); // Dependență goală pentr
+
   async function handleFormSubmit(e) {
+    e.preventDefault();
     onSubmit(e);
-    setShowPopup(false);
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 2000);
+
     try {
       const studentId = sessionStorage.getItem("userId");
-      const studentInfo = 
-      {
-      major: specializare,
-      series: serie,
-      cls: grupa,
-      }
-      const response = await fetch(`http://localhost:3001/api/students/updateProfile/${studentId}`, {
-        method: "PUT",
-        headers: {
-          "Content-type":"application/json"
-        },
-        body:JSON.stringify(studentInfo)
-      });
+      const studentInfo = {
+        major: formData.specializare,
+        series: formData.serie,
+        cls: formData.grupa,
+      };
+      const response = await fetch(
+        `http://localhost:3001/api/students/updateProfile/${encodeURIComponent(
+          studentId
+        )}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify(studentInfo),
+        }
+      );
 
       const data = await response.json();
 
       if (response.ok) {
-        setShowPopup(false);
+        setShowPopup(true);
         setTimeout(() => {
-          setShowPopup(true);
-        },2000);
+          setShowPopup(false);
+        }, 2000);
       } else {
         console.error("Error response", data);
       }
-    } catch(err) {
+    } catch (err) {
       console.error("Error updating student info:", err);
     }
   }
@@ -76,8 +182,8 @@ function ProfilStudent({
             <label htmlFor="specializare">Specializare:</label>
             <select
               id="specializare"
-              value={specializare}
-              onChange={(e) => setSpecializare(e.target.value)}
+              value={formData.specializare}
+              onChange={handleChange}
               required
             >
               <option value="">Selectează</option>
@@ -94,8 +200,8 @@ function ProfilStudent({
             <input
               id="serie"
               type="text"
-              value={serie}
-              onChange={(e) => setSerie(e.target.value.toUpperCase())}
+              value={formData.serie}
+              onChange={handleChange}
               maxLength="1"
               pattern="[A-Za-z]"
               required
@@ -106,11 +212,15 @@ function ProfilStudent({
             <label htmlFor="grupa">Grupa:</label>
             <input
               id="grupa"
-              type="number"
-              value={grupa}
-              onChange={(e) => setGrupa(e.target.value)}
+              type="text"
+              value={formData.grupa}
+              onChange={handleChange}
               required
             />
+          </div>
+          <div className="formGroup">
+            <label id="labelProfesor">Titlu lucrare de licenta:</label>
+            <label id="labelProfesor">{formData.titluLucrare}</label>
           </div>
 
           <button type="submit" className="formButton">

@@ -1,4 +1,4 @@
-import React, { useState, memo, useCallback } from "react";
+import React, { useState, memo, useEffect } from "react";
 
 function FormCompletare({
   onSubmit,
@@ -10,10 +10,10 @@ function FormCompletare({
   setSerie,
   grupa,
   setGrupa,
+  setStep,
 }) {
   const [showPopup, setShowPopup] = useState(false);
   const [error, setError] = useState(null);
-
   const [formData, setFormData] = useState({
     specializare: "",
     titluLucrare: "",
@@ -39,13 +39,16 @@ function FormCompletare({
 
     // Step 1: Add Thesis
     try {
-      const response = await fetch(`http://localhost:3001/api/thesis/insertThesis/${studentId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ titlu_lucrare: formData.titluLucrare }),
-      });
+      const response = await fetch(
+        `http://localhost:3001/api/thesis/insertThesis/${studentId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ titlu_lucrare: formData.titluLucrare }),
+        }
+      );
 
       const data = await response.json();
 
@@ -60,6 +63,7 @@ function FormCompletare({
       if (thesisId) {
         // Step 2: Store thesisId in sessionStorage
         sessionStorage.setItem("thesisId", thesisId);
+        sessionStorage.setItem("titluLucrare", formData.titluLucrare);
       }
     } catch (err) {
       console.error("Error adding thesis:", err);
@@ -77,13 +81,16 @@ function FormCompletare({
         lucrare: thesisId,
       };
 
-      const response = await fetch(`http://localhost:3001/api/students/updateInfo/${studentId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(studentInfo),
-      });
+      const response = await fetch(
+        `http://localhost:3001/api/students/updateInfo/${studentId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(studentInfo),
+        }
+      );
 
       const data = await response.json();
 
@@ -100,7 +107,118 @@ function FormCompletare({
       console.error("Error updating student info:", err);
       setError("Failed to update student info. Please try again later.");
     }
+
+    setStep((s) => s + 1);
   };
+
+  useEffect(() => {
+    const fetchStudentInfo = async () => {
+      const studentId = sessionStorage.getItem("userId"); // Presupun că ai ID-ul studentului în sessionStorage
+      console.log("Student ID:", studentId);
+
+      if (studentId) {
+        try {
+          const response = await fetch(
+            `http://localhost:3001/api/students/getStudentInfo/${encodeURIComponent(
+              studentId
+            )}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch student info");
+          }
+
+          const data = await response.json();
+
+          if (data.success && data.studentInfo) {
+            console.log("Received student info:", data.studentInfo);
+
+            setFormData((prevData) => ({
+              ...prevData,
+              specializare: data.studentInfo.specializare || "",
+              serie: data.studentInfo.serie || "",
+              grupa: data.studentInfo.grupa || "",
+            }));
+          } else {
+            setFormData((prevData) => ({
+              ...prevData,
+              specializare: "",
+              serie: "",
+              grupa: "",
+            }));
+            console.error(
+              "No student info found or other error:",
+              data.message
+            );
+          }
+        } catch (err) {
+          console.error("Error fetching student info:", err);
+          setFormData({
+            specializare: "",
+            titluLucrare: "",
+            serie: "",
+            grupa: "",
+          });
+        }
+      }
+    };
+
+    const fetchThesisName = async () => {
+      const studentId = sessionStorage.getItem("userId"); // Presupun că ai ID-ul studentului în sessionStorage
+      console.log("Student ID:", studentId);
+
+      if (studentId) {
+        try {
+          const response = await fetch(
+            `http://localhost:3001/api/thesis/getThesisByStudent/${encodeURIComponent(
+              studentId
+            )}`,
+            {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch thesis info");
+          }
+
+          const data = await response.json();
+          console.log("Received thesis:", data);
+          if (data.success && data.theses) {
+            setFormData((prevData) => ({
+              ...prevData, // Păstrăm datele anterioare
+              titluLucrare: data.theses.titlu_lucrare || "",
+            }));
+          } else {
+            setFormData((prevData) => ({
+              ...prevData, // Păstrăm datele anterioare
+              titluLucrare: "",
+            }));
+            console.error("No thesis info found or other error:", data.message);
+          }
+        } catch (err) {
+          console.error("Error fetching thesis info:", err);
+          setFormData({
+            specializare: "",
+            titluLucrare: "",
+            serie: "",
+            grupa: "",
+          });
+        }
+      }
+    };
+    fetchThesisName();
+    fetchStudentInfo();
+  }, []); // Dependență goală pentru că vrem să ruleze doar la montarea componentei
   return (
     <>
       <form onSubmit={handleFormSubmit} className="formContainer">
@@ -165,9 +283,7 @@ function FormCompletare({
         </button>
       </form>
       {error && (
-        <div className="alert alert-danger text-center mb-3">
-          {error}
-        </div>
+        <div className="alert alert-danger text-center mb-3">{error}</div>
       )}
       {showPopup && (
         <div className="popupMessage">
