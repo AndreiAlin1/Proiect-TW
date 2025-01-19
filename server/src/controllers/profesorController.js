@@ -337,10 +337,14 @@ const getProfessorID = async (req, res) => {
   try {
     const { email } = req.params;
 
+    const decodedEmail = decodeURIComponent(email);
+
+
     const [rows] = await conn.execute(
       "SELECT id FROM profesor WHERE email = ?",
-      [email]
+      [decodedEmail]
     );
+
 
     if (rows.length === 0) {
       return res

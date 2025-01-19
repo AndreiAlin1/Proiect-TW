@@ -9,12 +9,15 @@ router.get('/getAllTheses', thesisController.getAllTheses);
 
 router.get('/getThesis/:id', thesisController.getThesisById);
 
-router.get('getThesisByStudent/:id', thesisController.getThesisByStudentId);
+router.get('/getThesisByStudent/:id', thesisController.getThesisByStudentId);
+
+router.get('/getThesisByProf/:id', thesisController.getThesisByProfId);
 
 router.patch('/:id/status', thesisController.updateThesisStatus);
 
 router.patch('/setThesisProf/:id', thesisController.setThesisProf);
 
 router.delete('/:id', thesisController.deleteThesis);
+
 
 module.exports = router;
