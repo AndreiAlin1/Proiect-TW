@@ -47,7 +47,7 @@ export default function DropDown({ onLogout }) {
           <li>
             <button
               onClick={handleLogout}
-              className="text-left text-dark mb-2 border-0 bg-transparent"
+              className="text-left text-dark mb-2 border-0 bg-transparent w-full hover:bg-gray-100 px-0 py-2 text-decoration-underline"
             >
               Ieși din cont
             </button>

@@ -106,6 +106,63 @@ const addProfessorOAUTH = async (req, res) => {
   }
 };
 
+const updateIntervalsProfessor = async (req, res) => {
+  const conn = await pool.getConnection();
+
+  try {
+    const { id } = req.params; // ID-ul profesorului
+    console.log("IDPROFESOR INTERVALE", id);
+    const { intervalStart, intervalEnd } = req.body; // Intervalele primite din frontend
+
+    // Validăm că intervalele sunt prezente
+    if (!intervalStart || !intervalEnd) {
+      throw new Error("Missing required interval fields");
+    }
+
+    await conn.beginTransaction();
+
+    // Actualizăm intervalele în baza de date
+    const [result] = await conn.execute(
+      `UPDATE profesor
+         SET perioada_start = ?, perioada_final = ?
+         WHERE id = ?`,
+      [intervalStart, intervalEnd, id]
+    );
+
+    // Verificăm dacă profesorul a fost găsit
+    if (result.affectedRows === 0) {
+      await conn.rollback();
+      return res.status(404).json(createResponse(false, "Professor not found"));
+    }
+
+    await conn.commit();
+
+    // Răspuns de succes
+    res.status(200).json(
+      createResponse(true, "Professor intervals updated successfully", {
+        id,
+        intervalStart,
+        intervalEnd,
+      })
+    );
+  } catch (err) {
+    await conn.rollback();
+    console.error("Error in updateIntervalsProfessor:", err);
+    res
+      .status(500)
+      .json(
+        createResponse(
+          false,
+          "Error updating professor intervals",
+          null,
+          err.message
+        )
+      );
+  } finally {
+    conn.release();
+  }
+};
+
 /**
  * Actualizare detalii profesor
  */
@@ -275,10 +332,85 @@ const deleteProfessor = async (req, res) => {
   }
 };
 
+const getProfessorID = async (req, res) => {
+  const conn = await pool.getConnection();
+  try {
+    const { email } = req.params;
+
+    const [rows] = await conn.execute(
+      "SELECT id FROM profesor WHERE email = ?",
+      [email]
+    );
+
+    if (rows.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Professor not found" });
+    }
+
+    res.status(200).json({ success: true, professorID: rows[0].id });
+  } catch (err) {
+    console.error("Error retrieving professor ID:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "Error retrieving professor ID" });
+  } finally {
+    conn.release();
+  }
+};
+
+const getIntervalsProf = async (req, res) => {
+  const conn = await pool.getConnection();
+  try {
+    const { email } = req.params;
+    console.log("Received email:", email);
+    // Continuă cu logica ta
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email not provided",
+      });
+    }
+
+    const [rows] = await conn.execute(
+      "SELECT perioada_start, perioada_final FROM profesor WHERE email = ?",
+      [email || null] // Asigură-te că email-ul nu este undefined
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No intervals found",
+        intervals: { intervalStart: null, intervalEnd: null },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      intervals: {
+        intervalStart: rows[0].perioada_start || null,
+        intervalEnd: rows[0].perioada_final || null,
+      },
+    });
+  } catch (err) {
+    console.error("Error retrieving professor intervals:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error retrieving professor intervals",
+    });
+  } finally {
+    conn.release();
+  }
+};
+
 module.exports = {
   addProfessorOAUTH,
   updateProfessorDetails,
   getAllProfessors,
   getProfessorById,
   deleteProfessor,
+  updateIntervalsProfessor,
+  getProfessorID,
+  getIntervalsProf,
 };
