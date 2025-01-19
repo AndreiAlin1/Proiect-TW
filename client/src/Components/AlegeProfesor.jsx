@@ -23,9 +23,7 @@ const getProf = async () => {
     const today = new Date().toISOString().split("T")[0];
     return data.data.filter(
       (prof) =>
-        prof.nr_elevi < 10 &&
-        today >= prof.perioada_start &&
-        today <= prof.perioada_final
+        prof.nr_elevi < 10 
     ); // proprietatea data din response tine informatia de la return
   } catch (err) {
     console.log("Error fetching professors!", err);

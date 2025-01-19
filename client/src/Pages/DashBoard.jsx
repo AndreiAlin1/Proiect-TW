@@ -171,6 +171,9 @@ const Dashboard = ({ onLogout }) => {
   }
 
   return (
+   <> <DropDown
+   onLogout={onLogout}
+   />
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Welcome to the Dashboard</h1>
       
@@ -188,6 +191,7 @@ const Dashboard = ({ onLogout }) => {
         <p className="text-gray-500">No students found.</p>
       )}
     </div>
+  </>
   );
 };
 

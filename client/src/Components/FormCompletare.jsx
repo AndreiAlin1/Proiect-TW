@@ -64,7 +64,6 @@ function FormCompletare({
       // Assuming thesisId is returned as part of the response
       const thesisId = data?.thesisId;
       if (thesisId) {
-        // Step 2: Store thesisId in sessionStorage
         sessionStorage.setItem("thesisId", thesisId);
       }
     } catch (err) {
