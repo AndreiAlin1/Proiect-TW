@@ -49,22 +49,17 @@ function ProfilStudent({
   };
 
   useEffect(() => {
-    const titluDinSession = sessionStorage.getItem("titluThesis");
-    console.log("titlu din sesion " + titluDinSession);
+    // const titluDinSession = sessionStorage.getItem("titluThesis");
+    // console.log("titlu din sesion " + titluDinSession);
     const storedName = sessionStorage.getItem("userName");
     console.log("Retrieved username:", storedName); // verificăm ce recuperăm
 
-    if (titluDinSession) {
-      setFormData((prevData) => ({
-        ...prevData,
-        titluLucrare: titluDinSession,
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        titluLucrare: "Nu a fost setat inca",
-      }));
-    }
+    // if (titluDinSession) {
+    //   setFormData((prevData) => ({
+    //     ...prevData,
+    //     titluLucrare: titluDinSession,
+    //   }));
+    // }
 
     if (storedName) {
       setUserName(storedName);
@@ -98,8 +93,6 @@ function ProfilStudent({
               specializare: data.studentInfo?.specializare || "",
               serie: data.studentInfo?.serie || "",
               grupa: data.studentInfo?.grupa || "",
-              titluLucrare:
-                data.studentInfo?.titlu_lucrare || "Nu a fost setat încă",
             }));
           }
         } catch (err) {
@@ -115,7 +108,41 @@ function ProfilStudent({
       }
     };
 
+    const fetchThesisName = async () => {
+      const studentId = sessionStorage.getItem("userId");
+
+      if (studentId) {
+        try {
+          const response = await fetch(
+            `http://localhost:3001/api/thesis/getThesisTitleByStudent/${encodeURIComponent(
+              studentId
+            )}`
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch thesis info");
+          }
+
+          const data = await response.json();
+          console.log("Received thesis:", data);
+
+          // Setăm un string gol sau mesaj default pentru conturile noi
+          setFormData((prevData) => ({
+            ...prevData,
+            titluLucrare: data.theses?.titlu_lucrare || "",
+          }));
+        } catch (err) {
+          console.log("Error fetching thesis info:", err);
+          // Setăm valorile default în caz de eroare
+          setFormData((prev) => ({
+            ...prev,
+            titluLucrare: "",
+          }));
+        }
+      }
+    };
     fetchStudentInfo();
+    fetchThesisName();
   }, []);
 
   async function handleFormSubmit(e) {
