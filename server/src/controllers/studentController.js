@@ -118,6 +118,7 @@ const updateStudentDetails = async (req, res) => {
 
   try {
     const { id } = req.params;
+    console.log("ID", id);
     const { major, series, cls, lucrare } = req.body;  // Changed to match frontend
 
     if (!series || !cls || !major) {
@@ -133,6 +134,7 @@ const updateStudentDetails = async (req, res) => {
       [series, cls, major, lucrare, id]
     );
 
+    
     if (result.affectedRows === 0) {
       await conn.rollback();
       return res.status(404).json(createResponse(false, "Student not found"));
