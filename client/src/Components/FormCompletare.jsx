@@ -58,13 +58,10 @@ function FormCompletare({
         return;
       }
 
-      // Immediately set the thesis title in session storage
-      sessionStorage.setItem("titluThesis", formData.titluLucrare);
-      console.log("Titlu setat în session:", formData.titluLucrare);
-      // Assuming thesisId is returned as part of the response
-      const thesisId = data?.thesisId;
+      const thesisId = data?.data?.thesisId
       if (thesisId) {
         sessionStorage.setItem("thesisId", thesisId);
+        sessionStorage.setItem("titluThesis", formData.titluLucrare);
       }
     } catch (err) {
       console.error("Error adding thesis:", err);
