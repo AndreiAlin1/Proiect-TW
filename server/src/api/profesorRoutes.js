@@ -13,25 +13,12 @@ const {
 
 const authMiddleware = require("../middleware/auth");
 
-<<<<<<< HEAD
-router.get("/getAllProf", getAllProfessors);  
-router.get("/getProf/:id", getProfessorById); 
-=======
-router.get("/getAllProf", getAllProfessors);
-router.get("/professor/getProf", getProfessorById);
->>>>>>> e66dba39b4d507edb5666c01f5ec45cc0e53e8b4
+router.get("/getAllProf", getAllProfessors);  // Only one route for getting all professors
+router.get("/getProf/:id", getProfessorById); // Only one route for getting a professor by ID
 router.put("/:id", authMiddleware, updateProfessorDetails);
-router.delete("/:id", deleteProfessor);
+router.delete("/:id", authMiddleware, deleteProfessor);
 router.put("/putIntervalsProf/:id", updateIntervalsProfessor);
 router.get("/getProfessorID/:email", getProfessorID);
 router.get("/getIntervalsProf/:email", getIntervalsProf);
-<<<<<<< HEAD
-
-=======
-router.get("/getAllProf", getAllProfessors);
-router.get("/getProf/:id", getProfessorById);
-router.put("/:id", authMiddleware, updateProfessorDetails);
-router.delete("/:id", authMiddleware, deleteProfessor);
->>>>>>> e66dba39b4d507edb5666c01f5ec45cc0e53e8b4
 
 module.exports = router;
