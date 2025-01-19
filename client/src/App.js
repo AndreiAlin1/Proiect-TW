@@ -71,6 +71,10 @@ function App() {
     console.log("Specializare:", formData.specializare);
     console.log("Serie:", formData.serie);
     console.log("Grupa:", formData.grupa);
+    setSpecializare(formData.specializare);
+    setTitluLucrare(formData.titluLucrare);
+    setSerie(formData.setSerie);
+    setGrupa(formData.setGrupa);
   };
 
   const ProtectedRoute = ({ children }) => {
@@ -92,6 +96,7 @@ function App() {
           setSerie={setSerie}
           grupa={grupa}
           setGrupa={setGrupa}
+          setStep={setStep}
         />
       )}
       {step === 1 && <AlegeProfesor />}

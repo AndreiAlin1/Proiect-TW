@@ -67,20 +67,20 @@ const addStudentOAUTH = async (req, res) => {
 
     if (existing.length > 0) {
       await conn.commit();
-      return res
-        .status(201)
-        .json(createResponse(true, "Existing student", {
+      return res.status(201).json(
+        createResponse(true, "Existing student", {
           studentId: id,
           full_name,
           email,
-        }));
-     }
+        })
+      );
+    }
 
     // Insert new student
     const [result] = await conn.execute(
       `INSERT INTO student (id,nume_complet, email, imagine_profil)
             VALUES (?, ?, ?, ?)`,
-      [id,full_name, email, profile_picture]
+      [id, full_name, email, profile_picture]
     );
 
     await conn.commit();
@@ -119,7 +119,7 @@ const updateStudentDetails = async (req, res) => {
   try {
     const { id } = req.params;
     console.log("ID", id);
-    const { major, series, cls, lucrare } = req.body;  // Changed to match frontend
+    const { major, series, cls, lucrare } = req.body; // Changed to match frontend
 
     if (!series || !cls || !major) {
       throw new Error("Missing required fields");
@@ -134,7 +134,6 @@ const updateStudentDetails = async (req, res) => {
       [series, cls, major, lucrare, id]
     );
 
-    
     if (result.affectedRows === 0) {
       await conn.rollback();
       return res.status(404).json(createResponse(false, "Student not found"));
@@ -147,27 +146,33 @@ const updateStudentDetails = async (req, res) => {
         id,
         series,
         cls,
-        major
+        major,
       })
     );
   } catch (err) {
     await conn.rollback();
     console.error("Error in updateStudentDetails:", err);
-    res.status(500).json(
-      createResponse(false, "Error updating student details", null, err.message)
-    );
+    res
+      .status(500)
+      .json(
+        createResponse(
+          false,
+          "Error updating student details",
+          null,
+          err.message
+        )
+      );
   } finally {
     conn.release();
   }
 };
-
 
 const updateStudentProfile = async (req, res) => {
   const conn = await pool.getConnection();
 
   try {
     const { id } = req.params;
-    const { major, series, cls } = req.body;  // Changed to match frontend
+    const { major, series, cls } = req.body; // Changed to match frontend
 
     if (!series || !cls || !major) {
       throw new Error("Missing required fields");
@@ -194,15 +199,22 @@ const updateStudentProfile = async (req, res) => {
         id,
         series,
         cls,
-        major
+        major,
       })
     );
   } catch (err) {
     await conn.rollback();
     console.error("Error in updateStudentDetails:", err);
-    res.status(500).json(
-      createResponse(false, "Error updating student details", null, err.message)
-    );
+    res
+      .status(500)
+      .json(
+        createResponse(
+          false,
+          "Error updating student details",
+          null,
+          err.message
+        )
+      );
   } finally {
     conn.release();
   }
@@ -303,6 +315,50 @@ const checkStudentByEmail = async (email) => {
   }
 };
 
+const getStudentInfo = async (req, res) => {
+  const conn = await pool.getConnection();
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Student ID not provided",
+      });
+    }
+
+    const [rows] = await conn.execute(
+      "SELECT specializare, serie, grupa FROM student WHERE id = ?",
+      [id]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No student info found",
+        studentInfo: null,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      studentInfo: {
+        specializare: rows[0].specializare,
+        serie: rows[0].serie,
+        grupa: rows[0].grupa,
+      },
+    });
+  } catch (err) {
+    console.error("Error retrieving student info:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error retrieving student info",
+    });
+  } finally {
+    conn.release();
+  }
+};
+
 module.exports = {
   addStudentOAUTH,
   updateStudentDetails,
@@ -310,4 +366,5 @@ module.exports = {
   getStudentThesis,
   getStudentByThesis,
   checkStudentByEmail,
+  getStudentInfo,
 };
