@@ -1,6 +1,5 @@
 const pool = require("../config/db");
 
-// Helper function for standardized response format
 const createResponse = (success, message, data = null, error = null) => ({
   success,
   message,
@@ -113,6 +112,7 @@ const getThesisTitleByStudentId = async (req, res) => {
   }
 };
 
+
 const getThesisByStudentId = async (req, res) => {
   const conn = await pool.getConnection(); // Get a connection from the pool
   try {
@@ -149,7 +149,7 @@ const getThesisByStudentId = async (req, res) => {
 };
 
 const getThesisByProfId = async (req, res) => {
-  const conn = await pool.getConnection(); // Get a connection from the pool
+  const conn = await pool.getConnection(); 
   try {
     const { id } = req.params;
 

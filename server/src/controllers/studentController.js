@@ -223,6 +223,7 @@ const updateStudentProfile = async (req, res) => {
  * Get student thesis information
  */
 const getStudentByThesis = async (req, res) => {
+  const conn = await pool.getConnection();
   try {
     const { id } = req.params;
     const [result] = await pool.execute(
@@ -251,6 +252,8 @@ const getStudentByThesis = async (req, res) => {
           err.message
         )
       );
+  } finally {
+    conn.release();
   }
 };
 
