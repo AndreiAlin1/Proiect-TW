@@ -52,7 +52,7 @@ async function createTables(conn) {
         imagine_profil VARCHAR(255),
         perioada_start DATETIME,
         perioada_final DATETIME,
-        nr_elevi INT
+        nr_elevi INT DEFAULT 0
     );
   `;
 

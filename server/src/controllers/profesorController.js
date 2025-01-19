@@ -166,8 +166,7 @@ const getAllProfessors = async (req, res) => {
     const [results] = await pool.execute(
       `SELECT 
                 id, nume_complet, email, imagine_profil, 
-                perioada_start, perioada_final, nr_elevi,
-                data_creare, data_actualizare
+                perioada_start, perioada_final, nr_elevi
             FROM profesor`
     );
 

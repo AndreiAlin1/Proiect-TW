@@ -1,11 +1,58 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const profesoriDummy = ["Zurini", "Toma", "Dorian Popa", "Miguel"];
+const getProf = async () => {
+  try {
+    const response = await fetch("http://localhost:3001/api/professors/getAllProf", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    console.log("Api response for debug:", data);
+    if (!response.ok) {
+      throw new Error(data.message || "Network response is not ok!");
+    }
+
+    console.log("Filtered data:", data.data);
+
+    return data.data.filter(prof => prof.nr_elevi < 10); // proprietatea data din response tine informatia de la return
+  } catch (err) {
+    console.log("Error fetching professors!", err);
+    throw err;
+  }
+};
 
 function AlegeProfesor() {
-  const [profesor, setProfesor] = useState("");
+  const [professors, setProfessors] = useState([]); // Array of all professors
+  const [selectedProfesor, setSelectedProfesor] = useState(""); // Selected professor
   const [isSent, setIsSent] = useState(false);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [respins, setIsRespins] = useState(false);
+
+  useEffect(() => {
+    const loadProf = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getProf();
+
+        if (data.length === 0) {
+          setError("Nu există momentan profesori disponibili pentru coordonare.");
+          return;
+        }
+
+        setProfessors(data);
+        setError(null);
+      } catch (err) {
+        setError("Nu s-au putut încărca profesorii. Vă rugăm încercați mai târziu.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadProf();
+  }, []);
 
   function handleIsSent() {
     setIsSent(true);
@@ -18,8 +65,16 @@ function AlegeProfesor() {
 
   function handleIntoarceLaAles() {
     setIsSent(false);
-    setProfesor("");
+    setSelectedProfesor("");
     setIsRespins(false);
+  }
+
+  if (isLoading) {
+    return <div>Se încarcă...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
   }
 
   return (
@@ -28,7 +83,7 @@ function AlegeProfesor() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            if (profesor !== "") handleIsSent();
+            if (selectedProfesor !== "") handleIsSent();
           }}
           className="profesorContainer"
         >
@@ -38,21 +93,22 @@ function AlegeProfesor() {
             </label>
             <select
               id="profesor"
-              value={profesor}
-              onChange={(e) => setProfesor(e.target.value)}
+              value={selectedProfesor}
+              onChange={(e) => setSelectedProfesor(e.target.value)}
               required
             >
-              <option>Selecteaza</option>
-              {profesoriDummy.map((element) => (
-                <option value={element}>{element}</option>
+              <option value="">Selecteaza</option>
+              {professors.map((prof) => (
+                <option key={prof.id} value={prof.nume_complet}>
+                  {prof.nume_complet}
+                </option>
               ))}
             </select>
           </div>
           <button
             type="submit"
             className="formButton"
-            onClick={handleIsSent}
-            disabled={!profesor}
+            disabled={!selectedProfesor}
           >
             Trimite
           </button>
@@ -64,7 +120,7 @@ function AlegeProfesor() {
               <i className="bi bi-clock"></i>
             </span>
             <p id="parafInstiintare">
-              {profesor} a fost instiintat. Se aspteata un raspuns.
+              {selectedProfesor} a fost instiintat. Se asteapta un raspuns.
             </p>
           </div>
           <button onClick={handleRespingereColaborare}>Respingere</button>
@@ -78,13 +134,13 @@ function AlegeProfesor() {
           <div className="acceptareContainerV2">
             <p>
               Cadrul didactic nu a putut incepe colaborarea cu tine pentru
-              lucrarea de licenta.Va trebui sa incerci din nou alaturi de un alt
+              lucrarea de licenta. Va trebui sa incerci din nou alaturi de un alt
               profesor.
             </p>
             <button className="formButton" onClick={handleIntoarceLaAles}>
               Ok! Intoarce-ma la alesul profesorului!
             </button>
-          </div>{" "}
+          </div>
         </>
       )}
     </>

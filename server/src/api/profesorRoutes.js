@@ -10,8 +10,8 @@ const {
 
 const authMiddleware = require('../middleware/auth');
 
-router.get('/', getAllProfessors);
-router.get('/:id', getProfessorById);
+router.get('/getAllProf', getAllProfessors);
+router.get('/professor/getProf', getProfessorById);
 router.put('/:id', authMiddleware, updateProfessorDetails);
 router.delete('/:id', authMiddleware, deleteProfessor);
 
