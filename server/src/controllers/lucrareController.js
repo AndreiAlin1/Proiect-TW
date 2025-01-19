@@ -84,21 +84,20 @@ const getThesisById = async (req, res) => {
 };
 
 const getThesisTitleByStudentId = async (req, res) => {
-  const { id } = req.params; // Student ID from the request params
+  const { id } = req.params;
 
   try {
-    // Query to fetch theses for the given studentId
     const [theses] = await pool.execute(
       "SELECT titlu_lucrare FROM lucrare WHERE id_student = ?",
       [id]
     );
-    console.log("ID " + id);
-    console.log(theses);
 
+    // Pentru cont nou, returnăm un răspuns de succes cu titlu null
     if (theses.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No theses found for this student" });
+      return res.status(200).json({
+        success: true,
+        theses: { titlu_lucrare: null },
+      });
     }
 
     res.status(200).json({
@@ -107,6 +106,7 @@ const getThesisTitleByStudentId = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({
+      success: false,
       message: "Error fetching theses for student",
       error: err.message,
     });

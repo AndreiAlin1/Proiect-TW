@@ -49,9 +49,11 @@ function ProfilStudent({
   };
 
   useEffect(() => {
+    const titluDinSession = sessionStorage.getItem("titluThesis");
+    console.log("titlu din sesion " + titluDinSession);
     const storedName = sessionStorage.getItem("userName");
     console.log("Retrieved username:", storedName); // verificăm ce recuperăm
-    const titluDinSession = sessionStorage.getItem("titluLucrare");
+
     if (titluDinSession) {
       setFormData((prevData) => ({
         ...prevData,
@@ -71,21 +73,14 @@ function ProfilStudent({
 
   useEffect(() => {
     const fetchStudentInfo = async () => {
-      const studentId = sessionStorage.getItem("userId"); // Presupun că ai ID-ul studentului în sessionStorage
-      console.log("Student ID:", studentId);
+      const studentId = sessionStorage.getItem("userId");
 
       if (studentId) {
         try {
           const response = await fetch(
             `http://localhost:3001/api/students/getStudentInfo/${encodeURIComponent(
               studentId
-            )}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
+            )}`
           );
 
           if (!response.ok) {
@@ -94,40 +89,34 @@ function ProfilStudent({
 
           const data = await response.json();
 
-          if (data.success && data.studentInfo) {
+          if (data.success) {
             console.log("Received student info:", data.studentInfo);
 
+            // Setăm valorile default pentru câmpurile null
             setFormData((prevData) => ({
               ...prevData,
-              specializare: data.studentInfo.specializare || "",
-              serie: data.studentInfo.serie || "",
-              grupa: data.studentInfo.grupa || "",
+              specializare: data.studentInfo?.specializare || "",
+              serie: data.studentInfo?.serie || "",
+              grupa: data.studentInfo?.grupa || "",
+              titluLucrare:
+                data.studentInfo?.titlu_lucrare || "Nu a fost setat încă",
             }));
-          } else {
-            setFormData((prevData) => ({
-              ...prevData,
-              specializare: "",
-              serie: "",
-              grupa: "",
-            }));
-            console.error(
-              "No student info found or other error:",
-              data.message
-            );
           }
         } catch (err) {
           console.error("Error fetching student info:", err);
+          // Setăm valorile default în caz de eroare
           setFormData({
             specializare: "",
-            titluLucrare: "",
+            titluLucrare: "Nu a fost setat încă",
             serie: "",
             grupa: "",
           });
         }
       }
     };
+
     fetchStudentInfo();
-  }, []); // Dependență goală pentr
+  }, []);
 
   async function handleFormSubmit(e) {
     e.preventDefault();
