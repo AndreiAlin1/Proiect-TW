@@ -176,7 +176,7 @@ function FormCompletare({
       if (studentId) {
         try {
           const response = await fetch(
-            `http://localhost:3001/api/thesis/getThesisByStudent/${encodeURIComponent(
+            `http://localhost:3001/api/thesis/getThesisTitleByStudent/${encodeURIComponent(
               studentId
             )}`,
             {
