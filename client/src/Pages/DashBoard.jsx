@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Card from "../Components/Card";
 import DropDown from "../Partials/DropDown";
+import "../Styles/Dashboard.css";
 
 // Separate API functions
 const fetchProfessorID = async () => {
@@ -181,8 +182,8 @@ const Dashboard = ({ onLogout }) => {
     <>
       {" "}
       <DropDown onLogout={onLogout} />
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-4">Welcome to the Dashboard</h1>
+      <div className="container mx-auto p-4 containerDashboard">
+        <h1 className="text-2xl font-bold mb-4">Vizualizare cereri studenti</h1>
 
         {students.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -196,7 +197,9 @@ const Dashboard = ({ onLogout }) => {
             ))}
           </div>
         ) : (
-          <p className="text-gray-500">No students found.</p>
+          <p className="text-gray-500">
+            Nu exista studenti care sa-ti fi trimis inca o cerere.
+          </p>
         )}
       </div>
     </>

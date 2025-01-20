@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DropDown from "../Partials/DropDown";
 import CardStudent from "../Components/CardStudent";
+import "../Styles/ApprovedApplicants.css";
 
 // Copiem exact aceleași funcții de fetch ca în Dashboard
 const fetchProfessorID = async () => {
@@ -182,25 +183,29 @@ export default function ApprovedApplicants({ onLogout }) {
   console.log(students);
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Approved Applicants</h1>
+    <>
       <DropDown onLogout={onLogout} />
+      <div className="containerApprovedStudents">
+        <h1 className="text-2xl font-bold mb-4">Aplicanti acceptati</h1>
 
-      {approvedStudents.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {approvedStudents.map((student, index) => (
-            <CardStudent
-              key={student.id || index}
-              name={student.nume_complet}
-              specializare={student.specializare}
-              serie={student.serie}
-              grupa={student.grupa}
-            />
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-500">No approved students found.</p>
-      )}
-    </div>
+        {approvedStudents.length > 0 ? (
+          <div className="row row-cols-1 row-cols-md-2 g-4">
+            {approvedStudents.map((student, index) => (
+              <div>
+                <CardStudent
+                  key={student.id || index}
+                  name={student.nume_complet}
+                  specializare={student.specializare}
+                  serie={student.serie}
+                  grupa={student.grupa}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>Nu ai acceptat inca studenti.</p>
+        )}
+      </div>
+    </>
   );
 }
