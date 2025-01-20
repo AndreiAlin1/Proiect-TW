@@ -13,6 +13,14 @@ router.put(
   "/updateThesisStare/:id",
   thesisController.updateThesisStareAcceptata
 );
+router.put(
+  "/updateThesisStareRefuzata/:id",
+  thesisController.updateThesisStareRefuzata
+);
+router.put(
+  "/updateThesisStareNeincarcata/:id",
+  thesisController.updateThesisStareNeincarcata
+);
 
 //router.get("/getThesisByStudent/:id", thesisController.getThesisByStudentId);
 

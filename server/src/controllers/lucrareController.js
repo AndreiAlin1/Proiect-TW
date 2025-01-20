@@ -327,6 +327,78 @@ const updateThesisStareAcceptata = async (req, res) => {
   }
 };
 
+const updateThesisStareRefuzata = async (req, res) => {
+  console.log("merge");
+  const conn = await pool.getConnection(); // Get a connection from the pool
+  try {
+    const { id } = req.params;
+    console.log("ID -UL THESIS DORIT" + id);
+
+    const validStates = ["In evaluare", "Aprobată", "Respinsă", "Neîncărcată"];
+
+    const [result] = await conn.execute(
+      "UPDATE lucrare SET stare = ? WHERE id = ?",
+      [validStates[2], id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json(
+          createResponse(false, "Thesis not found or status unchanged", null)
+        );
+    }
+
+    return res
+      .status(200)
+      .json(createResponse(true, "Thesis status updated successfully", null));
+  } catch (err) {
+    return res
+      .status(500)
+      .json(
+        createResponse(false, "Error updating thesis status", null, err.message)
+      );
+  } finally {
+    conn.release(); // Release the connection back to the pool
+  }
+};
+
+const updateThesisStareNeincarcata = async (req, res) => {
+  console.log("merge");
+  const conn = await pool.getConnection(); // Get a connection from the pool
+  try {
+    const { id } = req.params;
+    console.log("ID -UL THESIS DORIT" + id);
+
+    const validStates = ["In evaluare", "Aprobată", "Respinsă", "Neîncărcată"];
+
+    const [result] = await conn.execute(
+      "UPDATE lucrare SET stare = ? WHERE id = ?",
+      [validStates[3], id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json(
+          createResponse(false, "Thesis not found or status unchanged", null)
+        );
+    }
+
+    return res
+      .status(200)
+      .json(createResponse(true, "Thesis status updated successfully", null));
+  } catch (err) {
+    return res
+      .status(500)
+      .json(
+        createResponse(false, "Error updating thesis status", null, err.message)
+      );
+  } finally {
+    conn.release(); // Release the connection back to the pool
+  }
+};
+
 const setThesisProf = async (req, res) => {
   const conn = await pool.getConnection(); // Get a connection from the pool
   try {
@@ -528,4 +600,6 @@ module.exports = {
   getNumberOfStudents,
   getThesisStatusByStudentId,
   getThesisProfessorIdByStudentId,
+  updateThesisStareRefuzata,
+  updateThesisStareNeincarcata,
 };

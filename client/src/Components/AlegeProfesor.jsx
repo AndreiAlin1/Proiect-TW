@@ -1,4 +1,32 @@
 import { useEffect, useState } from "react";
+// import { locals } from "../../../server/src/app";
+
+const updateThesisStatusNeincarcata = async (thesisId) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3001/api/thesis/updateThesisStareNeincarcata/${encodeURIComponent(
+        thesisId
+      )}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to update thesis status");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error updating thesis status:", error);
+    throw error;
+  }
+};
 
 const fetchThesisProfessorID = async () => {
   const studentId = sessionStorage.getItem("userId");
@@ -168,15 +196,25 @@ function AlegeProfesor() {
           ...prevData,
           nume_complet: nume_complet_cerut,
         }));
+      } else if (result === "Respinsă") {
+        setIsSent(true);
+        setSelectedProfesor((prevData) => ({
+          ...prevData,
+          nume_complet: nume_complet_cerut,
+        }));
+        setIsRespins(true);
       }
     };
     functionToFetch();
+    console.log(
+      "THESIS ID DE SESSION STORAGE : " + localStorage.getItem("thesisID")
+    );
   }, []);
 
   async function handleIsSent() {
     setIsSent(true);
     try {
-      const thesisId = sessionStorage.getItem("thesisId");
+      const thesisId = localStorage.getItem("thesisID");
       const obj = {
         id_prof: selectedProfesor.id,
         stare: "In evaluare",
@@ -208,10 +246,11 @@ function AlegeProfesor() {
     setIsRespins(false);
   }
 
-  function handleIntoarceLaAles() {
+  async function handleIntoarceLaAles() {
     setIsSent(false);
     setSelectedProfesor(null); // schimbat din ""
     setIsRespins(false);
+    await updateThesisStatusNeincarcata(localStorage.getItem("thesisID"));
   }
 
   if (isLoading) {
@@ -284,9 +323,9 @@ function AlegeProfesor() {
           </div>
           <div className="acceptareContainerV2">
             <p>
-              Cadrul didactic nu a putut incepe colaborarea cu tine pentru
-              lucrarea de licenta. Va trebui sa incerci din nou alaturi de un
-              alt profesor.
+              Cadrul didactic {selectedProfesor.nume_complet} nu a putut incepe
+              colaborarea cu tine pentru lucrarea de licenta. Va trebui sa
+              incerci din nou alaturi de un alt profesor.
             </p>
             <button className="formButton" onClick={handleIntoarceLaAles}>
               Ok! Intoarce-ma la alesul profesorului!

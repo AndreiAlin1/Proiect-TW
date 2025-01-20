@@ -89,6 +89,7 @@ function FormCompletare({
       const thesisId = data?.data?.thesisId;
       if (thesisId) {
         sessionStorage.setItem("thesisId", thesisId);
+        localStorage.setItem("thesisID", thesisId);
         sessionStorage.setItem("titluThesis", formData.titluLucrare);
       }
     } catch (err) {
@@ -150,6 +151,8 @@ function FormCompletare({
           sessionStorage.setItem("step2", true);
         } else if (result === "Aprobată") {
           setStep(2);
+        } else if (result === "Respinsă") {
+          setStep(1);
         }
       }
     };
