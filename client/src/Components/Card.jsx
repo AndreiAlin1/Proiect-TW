@@ -83,10 +83,10 @@ export default function Card({ studentName, thesisTitle, thesisObj }) {
     <div className="card">
       <div className="card-body">
         <h5 className="card-name">{studentName}</h5>
-        <p className="card-text">
+        <p className="card-text" id="cardProfesor">
           Doreste sa faca parte din echipa dvs. de Disertatie
         </p>
-        <p className="card-thesis-title">
+        <p className="card-thesis-title" id="cardProfesor">
           Titlu lucrare de licenta: {thesisTitle}
         </p>
       </div>

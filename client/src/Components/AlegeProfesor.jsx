@@ -258,7 +258,16 @@ function AlegeProfesor() {
   }
 
   if (error) {
-    return <div className="error-message">{error}</div>;
+    return (
+      <div className="formContainer">
+        <label
+          className="formGroup"
+          style={{ textAlign: "center", color: " #d8d7d7" }}
+        >
+          {error}
+        </label>
+      </div>
+    );
   }
 
   return (
