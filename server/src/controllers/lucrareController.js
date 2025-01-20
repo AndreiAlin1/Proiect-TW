@@ -402,6 +402,57 @@ const getNumberOfStudents = async (req, res) => {
     }
   }
 };
+
+// const getThesisStare = async (req, res) => {
+//   let conn;
+//   try {
+//     conn = await pool.getConnection();
+//     const { id } = req.params; // Extrage ID-ul din parametrii request-ului
+
+//     // Validare parametru
+//     if (!id) {
+//       return res.status(400).json({
+//         success: false,
+//         message: "THESIS ID is required",
+//       });
+//     }
+
+//     // Obține numărul de studenți
+//     const [rows] = await conn.execute(
+//       `SELECT stare from lucrare
+//          FROM lucrare
+//          stare = 'Aprobată'`,
+//       [id]
+//     );
+
+//     // Verifică dacă query-ul a returnat rezultate valide
+//     if (!rows || !rows[0] || rows[0].nr_studenti === null) {
+//       return res.status(500).json({
+//         success: false,
+//         message: "Failed to retrieve student count",
+//       });
+//     }
+
+//     return res.json({
+//       success: true,
+//       data: {
+//         professorId: id,
+//         studentCount: rows[0].nr_studenti,
+//       },
+//       message: "Student count retrieved successfully",
+//     });
+//   } catch (error) {
+//     console.error("Error in getNumberOfStudents:", error);
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message || "Failed to get number of students",
+//     });
+//   } finally {
+//     if (conn) {
+//       conn.release();
+//     }
+//   }
+// };
 module.exports = {
   addThesis,
   getAllTheses,
@@ -414,4 +465,5 @@ module.exports = {
   deleteThesis,
   updateThesisStareAcceptata,
   getNumberOfStudents,
+  // getThesisStare,
 };

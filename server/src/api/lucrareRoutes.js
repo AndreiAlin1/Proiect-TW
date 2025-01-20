@@ -8,6 +8,7 @@ router.get("/getAllTheses", thesisController.getAllTheses);
 router.get("/getThesis/:id", thesisController.getThesisById);
 router.get("/getThesisByStudent/:id", thesisController.getThesisByStudentId); // No need to repeat this route
 router.get("/getThesisByProf/:id", thesisController.getThesisByProfId);
+// router.get("/getThesisStare/:id"), thesisController.getThesisStare;
 router.put(
   "/updateThesisStare/:id",
   thesisController.updateThesisStareAcceptata

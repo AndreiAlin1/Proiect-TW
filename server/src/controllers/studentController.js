@@ -257,6 +257,41 @@ const getStudentByThesis = async (req, res) => {
   }
 };
 
+const getFullStudentByThesis = async (req, res) => {
+  const conn = await pool.getConnection();
+  try {
+    const { id } = req.params;
+    const [result] = await pool.execute(
+      `SELECT id, nume_complet, serie, grupa, specializare FROM student WHERE id_lucrare = ?`,
+      [id]
+    );
+
+    if (result.length === 0) {
+      return res.status(404).json(createResponse(false, "Student not found"));
+    }
+
+    res
+      .status(200)
+      .json(
+        createResponse(true, "Student thesis retrieved successfully", result[0])
+      );
+  } catch (err) {
+    console.error("Error in getStudentThesis:", err);
+    res
+      .status(500)
+      .json(
+        createResponse(
+          false,
+          "Error fetching student thesis",
+          null,
+          err.message
+        )
+      );
+  } finally {
+    conn.release();
+  }
+};
+
 const getStudentThesis = async (req, res) => {
   try {
     const { id } = req.params;
@@ -298,9 +333,6 @@ const getStudentThesis = async (req, res) => {
       );
   }
 };
-
-
-
 
 /**
  * Check if student exists by email
@@ -370,4 +402,5 @@ module.exports = {
   getStudentByThesis,
   checkStudentByEmail,
   getStudentInfo,
+  getFullStudentByThesis,
 };

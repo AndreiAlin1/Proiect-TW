@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const {
-    addStudentOAUTH,
-    updateStudentDetails,
-    updateStudentProfile,
-    getStudentByThesis,
-    getStudentThesis,
-    getStudentInfo // Make sure this is defined in your controller
-} = require('../controllers/studentController');
+  addStudentOAUTH,
+  updateStudentDetails,
+  updateStudentProfile,
+  getStudentByThesis,
+  getStudentThesis,
+  getStudentInfo, // Make sure this is defined in your controller
+  getFullStudentByThesis,
+} = require("../controllers/studentController");
 
 // Route for adding a new student (after OAuth authentication)
 router.post("/oauth", addStudentOAUTH);
@@ -26,5 +27,6 @@ router.get("/getStudentByThesis/:id", getStudentByThesis);
 
 // Route for retrieving student information
 router.get("/getStudentInfo/:id", getStudentInfo);
+router.get("/getFullStudentByThesis/:id", getFullStudentByThesis);
 
 module.exports = router;

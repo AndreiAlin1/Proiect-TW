@@ -149,6 +149,7 @@ const Dashboard = ({ onLogout }) => {
         const studentResults = await Promise.all(studentPromises);
         const validStudents = studentResults.filter(Boolean);
         setStudents(validStudents);
+        console.log("dadada " + JSON.stringify(validStudents, null, 2));
       } catch (err) {
         console.error("Error loading dashboard:", err);
         setError(err.message);
