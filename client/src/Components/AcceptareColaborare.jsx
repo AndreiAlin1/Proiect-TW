@@ -30,7 +30,6 @@ function RaspunsCerere({ onTrimiteDinNou, profesorId }) {
         }
       } catch (err) {
         console.log("Error fetching thesis info:", err);
-        // Setăm valorile default în caz de eroare
       }
     }
   };
@@ -56,12 +55,6 @@ function RaspunsCerere({ onTrimiteDinNou, profesorId }) {
 
   const handleUpload = async (e) => {
     e?.preventDefault(); // Pentru cazul când e folosit în form
-    console.log("am trimis")
-    const studentId = sessionStorage.getItem('userId');
-    if (!studentId) {
-      setErrorMessage("ID-ul studentului nu a fost găsit");
-      return;
-    }
 
     if (!selectedFile) {
       setErrorMessage("Te rugăm să selectezi un fișier");
@@ -73,10 +66,12 @@ function RaspunsCerere({ onTrimiteDinNou, profesorId }) {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('student_id', studentId);
+
+    const studentId = sessionStorage.getItem('userId');
+    console.log("IDUL STUDENTIULUI ESSSTEEEE ",studentId)
     
     try {
-      const response = await fetch(`http://localhost:3001/api/thesis/uploadThesis/${studentId}`, {
+      const response = await fetch(`http://localhost:3001/api/thesis/uploadThesis/${encodeURI(studentId)}`, {
         method: 'PUT',
         body: formData
       });
@@ -88,7 +83,6 @@ function RaspunsCerere({ onTrimiteDinNou, profesorId }) {
       const data = await response.json();
 
       if (data.success) {
-        setThesisStatus('In evaluare');
         await fetchThesisStatus(studentId);
       } else {
         throw new Error(data.message || "Eroare la încărcarea lucrării");

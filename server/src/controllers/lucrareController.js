@@ -549,7 +549,12 @@ const uploadThesis = async (req, res) => {
     }
 
     const { file } = req.files;
-    const { student_id } = req.body;
+    const { id } = req.params;
+
+    const decodedId = decodeURIComponent(id);
+
+
+    console.log("received id:", decodedId )
 
     // Validate file type
     const allowedTypes = [
@@ -575,7 +580,7 @@ const uploadThesis = async (req, res) => {
     // Check if student exists
     const [student] = await conn.execute(
       'SELECT id_lucrare FROM student WHERE id = ?',
-      [student_id]
+      [decodedId]
     );
 
     if (!student.length) {
@@ -586,8 +591,12 @@ const uploadThesis = async (req, res) => {
 
     // Create safe filename
     const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-    const uploadDir = path.join(__dirname, '../../uploads/teze');
+    const uploadDir = path.join(__dirname, '../uploads/teze');
     const uploadPath = path.join(uploadDir, fileName);
+
+    console.log("upload dir",uploadDir)
+    console.log("upload path",uploadPath)
+
 
     // Ensure upload directory exists
     try {
@@ -613,8 +622,10 @@ const uploadThesis = async (req, res) => {
       throw new Error('File not saved properly');
     }
 
-    // Store relative URL in database
-    const fileUrl = `/uploads/teze/${fileName}`;
+    const relativeUrl = `/uploads/teze/${fileName}`;
+    const fullUrl = `${'http://localhost:3001'}${relativeUrl}`;
+
+    console.log("fullurl:", fullUrl)
 
     // Begin transaction
     await conn.beginTransaction();
@@ -623,7 +634,7 @@ const uploadThesis = async (req, res) => {
       // Check for existing thesis
       const [existingThesis] = await conn.execute(
         'SELECT id FROM lucrare WHERE id_student = ? ORDER BY data_incarcare DESC LIMIT 1',
-        [student_id]
+        [decodedId]
       );
 
       if (existingThesis.length) {
@@ -633,21 +644,13 @@ const uploadThesis = async (req, res) => {
            SET fisier = ?, 
                data_incarcare = CURRENT_TIMESTAMP
            WHERE id = ?`,
-          [fileUrl, existingThesis[0].id]
+          [fullUrl, existingThesis[0].id]
         );
-      } else {
-        // Insert new thesis
-        await conn.execute(
-          `INSERT INTO lucrare (fisier, stare, id_student)
-           VALUES (?, 'In evaluare', ?)`,
-          [fileUrl, student_id]
-        );
-      }
-
+      } 
       await conn.commit();
 
       return res.status(200).json(
-        createResponse(true, "Thesis uploaded successfully", { fileUrl })
+        createResponse(true, "Thesis uploaded successfully", { fullUrl })
       );
 
     } catch (err) {
