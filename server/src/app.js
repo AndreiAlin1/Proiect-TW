@@ -25,7 +25,7 @@ const DB_Init = require("./database/DB_Init.JS");
 const app = express();
 
 // Configure upload paths
-const uploadsPath = path.join(__dirname, 'uploads');  // Stay inside the server directory
+const uploadsPath = path.join(__dirname, '../uploads');  // Stay inside the server directory
 const tezeUploadPath = path.join(uploadsPath, 'teze');
 const publicPath = path.join(__dirname, 'public');
 

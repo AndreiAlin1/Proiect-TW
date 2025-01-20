@@ -591,7 +591,7 @@ const uploadThesis = async (req, res) => {
 
     // Create safe filename
     const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-    const uploadDir = path.join(__dirname, '../uploads/teze');
+    const uploadDir = path.join(__dirname, '../../uploads/teze'); // Go up three levels: controllers -> src -> server -> uploads/teze
     const uploadPath = path.join(uploadDir, fileName);
 
     console.log("upload dir",uploadDir)
@@ -624,8 +624,6 @@ const uploadThesis = async (req, res) => {
 
     const relativeUrl = `/uploads/teze/${fileName}`;
     const fullUrl = `${'http://localhost:3001'}${relativeUrl}`;
-
-    console.log("fullurl:", fullUrl)
 
     // Begin transaction
     await conn.beginTransaction();
