@@ -2,9 +2,41 @@ import React from "react";
 import "../Styles/Card.css";
 
 //aici trebuiet sa preluam din bd pentru fiecare id corespunzator lista cu cei care vor sa aplice , care au statusul de pending
-export default function Card({ studentName, thesisTitle }) {
+export default function Card({ studentName, thesisTitle, thesisObj }) {
   function handleAcceptareCerere() {
     console.log("MERGE FRATE");
+    console.log(thesisObj);
+
+    const updateThesisStatusAccepted = async (thesisId) => {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/api/thesis/updateThesisStare/${encodeURIComponent(
+            thesisId
+          )}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || "Failed to update thesis status"
+          );
+        }
+
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        console.error("Error updating thesis status:", error);
+        throw error;
+      }
+    };
+
+    updateThesisStatusAccepted(thesisObj.id);
   }
 
   return (

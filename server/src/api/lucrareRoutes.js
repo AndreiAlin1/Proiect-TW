@@ -8,6 +8,10 @@ router.get("/getAllTheses", thesisController.getAllTheses);
 router.get("/getThesis/:id", thesisController.getThesisById);
 router.get("/getThesisByStudent/:id", thesisController.getThesisByStudentId); // No need to repeat this route
 router.get("/getThesisByProf/:id", thesisController.getThesisByProfId);
+router.put(
+  "/updateThesisStare/:id",
+  thesisController.updateThesisStareAcceptata
+);
 
 //router.get("/getThesisByStudent/:id", thesisController.getThesisByStudentId);
 
@@ -19,5 +23,7 @@ router.get(
   "/getThesisTitleByStudent/:id",
   thesisController.getThesisTitleByStudentId
 );
+
+router.get("/getNumberOfStudents/:id", thesisController.getNumberOfStudents);
 
 module.exports = router;

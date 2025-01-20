@@ -169,6 +169,7 @@ function App() {
             element={
               <ProfilProfesor
                 numarElevi={numarElevi}
+                setNumarElevi={setNumarElevi}
                 intervalStart={intervalStart}
                 setIntervalStart={setIntervalStart}
                 intervalEnd={intervalEnd}

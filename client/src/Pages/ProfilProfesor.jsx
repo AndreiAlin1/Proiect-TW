@@ -2,8 +2,104 @@ import React, { useState, useEffect, memo } from "react";
 import "../Styles/ProfilProfesor.css";
 import DropDown from "../Partials/DropDown";
 
+const fetchProfessorID = async () => {
+  const storedEmail = sessionStorage.getItem("userEmail");
+  console.log("Retrieved email:", storedEmail);
+
+  if (storedEmail) {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/professors/getProfessorID/${storedEmail}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch professor ID");
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        sessionStorage.setItem("userId", data.professorID); // Salvează în sessionStorage
+      } else {
+        console.error(data.message);
+      }
+    } catch (err) {
+      console.error("Error fetching professor ID:", err);
+    }
+  }
+};
+
+// API function to get number of students for a professor
+const fetchStudentCount = async (professorId) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3001/api/thesis/getNumberOfStudents/${encodeURIComponent(
+        professorId
+      )}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Failed to fetch student count");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching student count:", error);
+    throw error;
+  }
+};
+const updateStudentCount = async () => {
+  try {
+    const data = await fetchStudentCount(sessionStorage.getItem("userId"));
+    // aici poți folosi datele
+    console.log("THIS IS THE DATA FROM STUDENT COUNT" + data);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+const updateStudentCountInDB = async (professorId, studentCount) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3001/api/professors/updateNrElevi/${professorId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nr_elevi: studentCount }),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to update student count in DB");
+    }
+
+    console.log("Student count updated successfully in DB:", data.message);
+  } catch (error) {
+    console.error("Error updating student count in DB:", error);
+  }
+};
+
 function ProfilProfesor({
   numarElevi,
+  setNumarElevi,
   intervalStart,
   setIntervalStart,
   intervalEnd,
@@ -24,40 +120,49 @@ function ProfilProfesor({
   }, []);
 
   useEffect(() => {
-    const fetchProfessorID = async () => {
-      const storedEmail = sessionStorage.getItem("userEmail");
-      console.log("Retrieved email:", storedEmail);
+    const initializeData = async () => {
+      try {
+        console.log("aici merge 1");
+        await fetchProfessorID();
+        console.log("aici merge 2");
 
-      if (storedEmail) {
-        try {
-          const response = await fetch(
-            `http://localhost:3001/api/professors/getProfessorID/${storedEmail}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
+        // Adaugă un delay mic pentru a te asigura că userId e salvat
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        const userId = sessionStorage.getItem("userId");
+        console.log("userId din sessionStorage:", userId); // verifică dacă există userId
+
+        if (userId) {
+          try {
+            const response = await fetchStudentCount(userId);
+            console.log("Data from fetchStudentCount:", response.data);
+            if (response.success && response.data.studentCount <= 10) {
+              setNumarElevi(response.data.studentCount);
+              //Acum trebuie sa facem si update in baza de date
+
+              console.log(
+                "INAINTE DE A TRIMIT ID " + response.data.professorId
+              );
+              await updateStudentCountInDB(
+                response.data.professorId,
+                response.data.studentCount
+              );
+              console.log("UPDATED IN DATABSE NR ELEVI");
             }
-          );
-
-          if (!response.ok) {
-            throw new Error("Failed to fetch professor ID");
+          } catch (error) {
+            console.error("Error in fetchStudentCount:", error);
           }
-
-          const data = await response.json();
-
-          if (data.success) {
-            sessionStorage.setItem("userId", data.professorID); // Salvează în sessionStorage
-          } else {
-            console.error(data.message);
-          }
-        } catch (err) {
-          console.error("Error fetching professor ID:", err);
+        } else {
+          console.error("Nu s-a găsit userId în sessionStorage");
         }
+
+        console.log("aici merge 3");
+      } catch (error) {
+        console.error("Error in initializeData:", error);
       }
     };
 
-    fetchProfessorID();
+    initializeData();
   }, []);
 
   useEffect(() => {

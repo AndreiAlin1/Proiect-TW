@@ -190,6 +190,7 @@ const Dashboard = ({ onLogout }) => {
                 key={student.id || index}
                 studentName={student.nume_complet}
                 thesisTitle={student.thesis.titlu_lucrare}
+                thesisObj={student.thesis}
               />
             ))}
           </div>

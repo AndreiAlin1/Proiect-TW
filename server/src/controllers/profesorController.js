@@ -339,12 +339,10 @@ const getProfessorID = async (req, res) => {
 
     const decodedEmail = decodeURIComponent(email);
 
-
     const [rows] = await conn.execute(
       "SELECT id FROM profesor WHERE email = ?",
       [decodedEmail]
     );
-
 
     if (rows.length === 0) {
       return res
@@ -408,6 +406,73 @@ const getIntervalsProf = async (req, res) => {
   }
 };
 
+const updateNrElevi = async (req, res) => {
+  const conn = await pool.getConnection();
+  try {
+    const { id } = req.params;
+    console.log("id ul este acesta " + id);
+    const { nr_elevi } = req.body;
+    console.log("acesta este nr elevi " + nr_elevi);
+
+    // Validare input
+    if (nr_elevi === undefined) {
+      return res.status(400).json({
+        success: false,
+        message: "Number of students is required",
+        data: null,
+      });
+    }
+
+    // Verificăm dacă profesorul există
+    const [profExists] = await conn.execute(
+      "SELECT id FROM profesor WHERE id = ?",
+      [id]
+    );
+
+    if (profExists.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: `No professor found with ID: ${id}`,
+        data: null,
+      });
+    }
+
+    // Update simplu al numărului de elevi
+    const [result] = await conn.execute(
+      "UPDATE profesor SET nr_elevi = ? WHERE id = ?",
+      [nr_elevi, id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Failed to update number of students",
+        data: null,
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Number of students updated successfully",
+      data: {
+        professorId: id,
+        updatedStudentCount: nr_elevi,
+      },
+    });
+  } catch (error) {
+    console.error("Error in updateNrElevi:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error while updating number of students",
+      error: error.message,
+    });
+  } finally {
+    if (conn) {
+      conn.release();
+    }
+  }
+};
+
 module.exports = {
   addProfessorOAUTH,
   updateProfessorDetails,
@@ -417,4 +482,5 @@ module.exports = {
   updateIntervalsProfessor,
   getProfessorID,
   getIntervalsProf,
+  updateNrElevi,
 };
