@@ -35,6 +35,8 @@ if (!fs.existsSync(uploadsPath)) {
 // Serve static files from uploads directory
 app.use('/uploads', express.static(uploadsPath));
 
+
+
 // Security middleware
 app.use(helmet());
 

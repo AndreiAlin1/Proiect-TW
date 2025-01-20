@@ -631,7 +631,6 @@ const uploadThesis = async (req, res) => {
         await conn.execute(
           `UPDATE lucrare 
            SET fisier = ?, 
-               stare = 'In evaluare', 
                data_incarcare = CURRENT_TIMESTAMP
            WHERE id = ?`,
           [fileUrl, existingThesis[0].id]
