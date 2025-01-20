@@ -1,11 +1,12 @@
-// app.js
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
+const fileUpload = require('express-fileupload');
 const path = require("path");
+const fs = require('fs');
 
 // Load environment variables
 dotenv.config();
@@ -23,13 +24,25 @@ const DB_Init = require("./database/DB_Init.JS");
 // Create Express app
 const app = express();
 
+// Make sure this path points to your uploads directory
+const uploadsPath = path.join(__dirname, 'uploads');
+
+// Create uploads directory if it doesn't exist
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true });
+}
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(uploadsPath));
+
 // Security middleware
 app.use(helmet());
 
+// CORS configuration
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:3000",
-    methods: ["GET", "POST", "PATCH","PUT", "DELETE"],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization", "Accept"],
   })
@@ -49,6 +62,12 @@ app.use(express.urlencoded({ extended: true }));
 
 // Static files (if needed)
 app.use(express.static(path.join(__dirname, "public")));
+
+// File upload middleware
+app.use(fileUpload({
+  createParentPath: true,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+}));
 
 // API routes
 app.use("/api/auth", authRoutes);

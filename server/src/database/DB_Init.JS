@@ -62,6 +62,7 @@ async function createTables(conn) {
     titlu_lucrare VARCHAR(255),
     data_incarcare TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     stare enum('In evaluare','Aprobată','Respinsă', 'Neîncărcată'),
+    fisier VARCHAR(255),
     id_student VARCHAR(255),
     id_profesor VARCHAR(255),
     INDEX (id_student),

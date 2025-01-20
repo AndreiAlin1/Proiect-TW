@@ -4,6 +4,8 @@ const thesisController = require("../controllers/lucrareController");
 
 // Routes for handling thesis operations
 router.post("/insertThesis/:id", thesisController.addThesis);
+router.put("/uploadThesis/:id",thesisController.uploadThesis)
+router.get("/downloadThesis/:id",thesisController.downloadThesis)
 router.get("/getAllTheses", thesisController.getAllTheses);
 router.get("/getThesis/:id", thesisController.getThesisById);
 router.get("/getThesisByStudent/:id", thesisController.getThesisByStudentId); // No need to repeat this route
