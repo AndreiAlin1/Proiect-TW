@@ -112,6 +112,67 @@ const getThesisTitleByStudentId = async (req, res) => {
   }
 };
 
+const getThesisProfessorIdByStudentId = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [theses] = await pool.execute(
+      "SELECT id_profesor FROM lucrare WHERE id_student = ?",
+      [id]
+    );
+
+    // Pentru cont nou, returnăm un răspuns de succes cu titlu null
+    if (theses.length === 0) {
+      return res.status(200).json({
+        success: true,
+        theses: { id_profesor: null },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      theses: theses[theses.length - 1],
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching theses for student",
+      error: err.message,
+    });
+  }
+};
+
+const getThesisStatusByStudentId = async (req, res) => {
+  const { id } = req.params;
+  console.log("FOR THESES STATUS STEP " + id);
+
+  try {
+    const [theses] = await pool.execute(
+      "SELECT stare FROM lucrare WHERE id_student = ?",
+      [id]
+    );
+
+    // Pentru cont nou, returnăm un răspuns de succes cu titlu null
+    if (theses.length === 0) {
+      return res.status(200).json({
+        success: true,
+        theses: { stare: null },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      theses: theses[theses.length - 1],
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching theses for student",
+      error: err.message,
+    });
+  }
+};
+
 const getThesisByStudentId = async (req, res) => {
   const conn = await pool.getConnection(); // Get a connection from the pool
   try {
@@ -465,5 +526,6 @@ module.exports = {
   deleteThesis,
   updateThesisStareAcceptata,
   getNumberOfStudents,
-  // getThesisStare,
+  getThesisStatusByStudentId,
+  getThesisProfessorIdByStudentId,
 };

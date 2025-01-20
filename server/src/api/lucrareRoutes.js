@@ -25,6 +25,15 @@ router.get(
   thesisController.getThesisTitleByStudentId
 );
 
+router.get(
+  "/getThesisStatusByStudentId/:id",
+  thesisController.getThesisStatusByStudentId
+);
+router.get(
+  "/getThesisProfessorIdByStudentId/:id",
+  thesisController.getThesisProfessorIdByStudentId
+);
+
 router.get("/getNumberOfStudents/:id", thesisController.getNumberOfStudents);
 
 module.exports = router;

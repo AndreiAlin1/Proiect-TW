@@ -473,6 +473,37 @@ const updateNrElevi = async (req, res) => {
   }
 };
 
+const getProfessorNameById = async (req, res) => {
+  const { id } = req.params;
+  console.log("FOR THESES STATUS STEP " + id);
+
+  try {
+    const [profesor] = await pool.execute(
+      "SELECT nume_complet FROM profesor WHERE id = ?",
+      [id]
+    );
+
+    // Pentru cont nou, returnăm un răspuns de succes cu titlu null
+    if (profesor.length === 0) {
+      return res.status(200).json({
+        success: true,
+        profesor: { nume_complet: null },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      profesor: profesor[profesor.length - 1],
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching theses for student",
+      error: err.message,
+    });
+  }
+};
+
 module.exports = {
   addProfessorOAUTH,
   updateProfessorDetails,
@@ -483,4 +514,5 @@ module.exports = {
   getProfessorID,
   getIntervalsProf,
   updateNrElevi,
+  getProfessorNameById,
 };

@@ -10,6 +10,7 @@ const {
   getProfessorID,
   getIntervalsProf,
   updateNrElevi,
+  getProfessorNameById,
 } = require("../controllers/profesorController");
 
 const authMiddleware = require("../middleware/auth");
@@ -22,5 +23,6 @@ router.put("/putIntervalsProf/:id", updateIntervalsProfessor);
 router.put("/updateNrElevi/:id", updateNrElevi);
 router.get("/getProfessorID/:email", getProfessorID);
 router.get("/getIntervalsProf/:email", getIntervalsProf);
+router.get("/getProfessorNameById/:id", getProfessorNameById);
 
 module.exports = router;

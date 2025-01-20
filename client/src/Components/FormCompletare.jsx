@@ -1,5 +1,33 @@
 import React, { useState, memo, useEffect } from "react";
 
+const fetchThesisStatus = async () => {
+  const studentId = sessionStorage.getItem("userId");
+
+  if (studentId) {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/thesis/getThesisStatusByStudentId/${encodeURIComponent(
+          studentId
+        )}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch thesis info");
+      }
+
+      const data = await response.json();
+      console.log("Received thesis:", data);
+
+      if (data.success) {
+        return data.theses.stare;
+      }
+    } catch (err) {
+      console.log("Error fetching thesis info:", err);
+      // Setăm valorile default în caz de eroare
+    }
+  }
+};
+
 function FormCompletare({
   onSubmit,
   specializare,
@@ -58,7 +86,7 @@ function FormCompletare({
         return;
       }
 
-      const thesisId = data?.data?.thesisId
+      const thesisId = data?.data?.thesisId;
       if (thesisId) {
         sessionStorage.setItem("thesisId", thesisId);
         sessionStorage.setItem("titluThesis", formData.titluLucrare);
@@ -108,6 +136,25 @@ function FormCompletare({
 
     setStep((s) => s + 1);
   };
+
+  useEffect(() => {
+    const functionToFetch = async () => {
+      const result = await fetchThesisStatus();
+      console.log("SA VEDEM REZULTATUL " + result);
+
+      if (result) {
+        if (result === "Neîncărcată") {
+          setStep(0);
+        } else if (result === "In evaluare") {
+          setStep(1);
+          sessionStorage.setItem("step2", true);
+        } else if (result === "Aprobată") {
+          setStep(2);
+        }
+      }
+    };
+    functionToFetch();
+  }, []);
 
   useEffect(() => {
     const fetchStudentInfo = async () => {

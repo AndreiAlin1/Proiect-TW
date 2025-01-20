@@ -1,5 +1,87 @@
 import { useEffect, useState } from "react";
 
+const fetchThesisProfessorID = async () => {
+  const studentId = sessionStorage.getItem("userId");
+
+  if (studentId) {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/thesis/getThesisProfessorIdByStudentId/${encodeURIComponent(
+          studentId
+        )}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch thesis info");
+      }
+
+      const data = await response.json();
+      console.log("Received thesis:", data);
+
+      if (data.success) {
+        return data.theses.id_profesor;
+      }
+    } catch (err) {
+      console.log("Error fetching thesis info:", err);
+      // Setăm valorile default în caz de eroare
+    }
+  }
+};
+
+const fetchProfessorNameById = async (professorId) => {
+  if (professorId) {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/professors/getProfessorNameById/${encodeURIComponent(
+          professorId
+        )}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch profesor info");
+      }
+
+      const data = await response.json();
+      console.log("Received profesor:", data);
+
+      if (data.success) {
+        return data.profesor.nume_complet;
+      }
+    } catch (err) {
+      console.log("Error fetching profesor info:", err);
+      // Setăm valorile default în caz de eroare
+    }
+  }
+};
+
+const fetchThesisStatus = async () => {
+  const studentId = sessionStorage.getItem("userId");
+
+  if (studentId) {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/thesis/getThesisStatusByStudentId/${encodeURIComponent(
+          studentId
+        )}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch thesis info");
+      }
+
+      const data = await response.json();
+      console.log("Received thesis:", data);
+
+      if (data.success) {
+        return data.theses.stare;
+      }
+    } catch (err) {
+      console.log("Error fetching thesis info:", err);
+      // Setăm valorile default în caz de eroare
+    }
+  }
+};
+
 const getProf = async () => {
   try {
     const response = await fetch(
@@ -65,6 +147,30 @@ function AlegeProfesor() {
       }
     };
     loadProf();
+  }, []);
+
+  useEffect(() => {
+    const functionToFetch = async () => {
+      const result = await fetchThesisStatus();
+      const id_profesor_cerut = await fetchThesisProfessorID();
+      const nume_complet_cerut = await fetchProfessorNameById(
+        id_profesor_cerut
+      );
+      console.log("SA VEDEM REZULTATUL DIN ALEGE PROFESOR " + result);
+      console.log("SA VEDEM SI ID UL DE PROF " + id_profesor_cerut);
+      console.log(
+        "SA VEDEM SI NUMELEE PE CARE ILL VOIAAM " + nume_complet_cerut
+      );
+
+      if (result === "In evaluare") {
+        setIsSent(true);
+        setSelectedProfesor((prevData) => ({
+          ...prevData,
+          nume_complet: nume_complet_cerut,
+        }));
+      }
+    };
+    functionToFetch();
   }, []);
 
   async function handleIsSent() {
