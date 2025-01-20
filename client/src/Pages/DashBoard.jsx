@@ -40,14 +40,15 @@ const fetchProfessorID = async () => {
 };
 
 const fetchTheses = async (profId) => {
-  console.log("Sending parameter: ",profId)
+  console.log("Sending parameter: ", profId);
 
   if (!profId) {
     throw new Error("No user email found");
   }
 
   try {
-    const response = await fetch(`http://localhost:3001/api/thesis/getThesisByProf/${profId}`,
+    const response = await fetch(
+      `http://localhost:3001/api/thesis/getThesisByProf/${profId}`,
       {
         method: "GET",
         headers: {
@@ -56,7 +57,12 @@ const fetchTheses = async (profId) => {
       }
     );
 
-    // Debug logs
+    // If we get a 404, it means no theses found - return empty array
+    if (response.status === 404) {
+      return [];
+    }
+
+    // For other non-OK responses, throw error
     if (!response.ok) {
       throw new Error("Response not ok on fetch thesis");
     }
@@ -64,7 +70,6 @@ const fetchTheses = async (profId) => {
     const data = await response.json();
 
     if (data.success) {
-      sessionStorage.setItem("userId", data.professorID);
       return data.data || [];
     } else {
       throw new Error(data.message || "Failed to get professor ID");
@@ -74,7 +79,6 @@ const fetchTheses = async (profId) => {
     throw err;
   }
 };
-
 const fetchStudentByThesis = async (thesisId) => {
   try {
     const response = await fetch(
@@ -134,7 +138,10 @@ const Dashboard = ({ onLogout }) => {
               thesis: thesis,
             };
           } catch (error) {
-            console.error(`Failed to fetch student for thesis ${thesis.id}:`, error);
+            console.error(
+              `Failed to fetch student for thesis ${thesis.id}:`,
+              error
+            );
             return null;
           }
         });
@@ -142,7 +149,6 @@ const Dashboard = ({ onLogout }) => {
         const studentResults = await Promise.all(studentPromises);
         const validStudents = studentResults.filter(Boolean);
         setStudents(validStudents);
-
       } catch (err) {
         console.error("Error loading dashboard:", err);
         setError(err.message);
@@ -171,27 +177,27 @@ const Dashboard = ({ onLogout }) => {
   }
 
   return (
-   <> <DropDown
-   onLogout={onLogout}
-   />
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Welcome to the Dashboard</h1>
-      
-      {students.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {students.map((student, index) => (
-           <Card 
-           key={student.id || index} 
-           studentName={student.nume_complet} 
-           thesisTitle={student.thesis.titlu_lucrare} 
-         />
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-500">No students found.</p>
-      )}
-    </div>
-  </>
+    <>
+      {" "}
+      <DropDown onLogout={onLogout} />
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">Welcome to the Dashboard</h1>
+
+        {students.length > 0 ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {students.map((student, index) => (
+              <Card
+                key={student.id || index}
+                studentName={student.nume_complet}
+                thesisTitle={student.thesis.titlu_lucrare}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No students found.</p>
+        )}
+      </div>
+    </>
   );
 };
 
