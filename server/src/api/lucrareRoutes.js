@@ -1,11 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const thesisController = require("../controllers/lucrareController");
+// const tezeUploadPath = path.join(uploadsPath, "teze");
 
 // Routes for handling thesis operations
 router.post("/insertThesis/:id", thesisController.addThesis);
-router.put("/uploadThesis/:id",thesisController.uploadThesis)
-router.get("/downloadThesis/:id",thesisController.downloadThesis)
+router.put("/uploadThesis/:id", thesisController.uploadThesis);
+router.get("/downloadThesis/:id", thesisController.downloadThesis);
 router.get("/getAllTheses", thesisController.getAllTheses);
 router.get("/getThesis/:id", thesisController.getThesisById);
 router.get("/getThesisByStudent/:id", thesisController.getThesisByStudentId); // No need to repeat this route
@@ -47,3 +48,4 @@ router.get(
 router.get("/getNumberOfStudents/:id", thesisController.getNumberOfStudents);
 
 module.exports = router;
+// module.exports.tezeUploadPath = tezeUploadPath;

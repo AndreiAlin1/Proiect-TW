@@ -158,6 +158,7 @@ export default function ApprovedApplicants({ onLogout }) {
     };
 
     loadDashboardData();
+    console.log("ACESTEA SUNT DATELE " + students);
   }, []);
 
   if (isLoading) {
@@ -180,7 +181,11 @@ export default function ApprovedApplicants({ onLogout }) {
   const approvedStudents = students.filter(
     (student) => student.thesis.stare === "Aprobată"
   );
-  console.log(students);
+  approvedStudents.map((student) =>
+    console.log(
+      "DECI AVEM ID SI NUME " + student.id + " " + student.nume_complet
+    )
+  );
 
   return (
     <>
@@ -190,10 +195,10 @@ export default function ApprovedApplicants({ onLogout }) {
 
         {approvedStudents.length > 0 ? (
           <div className="row row-cols-1 row-cols-md-2 g-4">
-            {approvedStudents.map((student, index) => (
+            {approvedStudents.map((student) => (
               <div>
                 <CardStudent
-                  key={student.id || index}
+                  studentId={student.id}
                   name={student.nume_complet}
                   specializare={student.specializare}
                   serie={student.serie}

@@ -4,9 +4,9 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
-const fileUpload = require('express-fileupload');
+const fileUpload = require("express-fileupload");
 const path = require("path");
-const fs = require('fs');
+const fs = require("fs");
 
 // Load environment variables
 dotenv.config();
@@ -25,12 +25,12 @@ const DB_Init = require("./database/DB_Init.JS");
 const app = express();
 
 // Configure upload paths
-const uploadsPath = path.join(__dirname, '../uploads');  // Stay inside the server directory
-const tezeUploadPath = path.join(uploadsPath, 'teze');
-const publicPath = path.join(__dirname, 'public');
+const uploadsPath = path.join(__dirname, "../uploads"); // Stay inside the server directory
+const tezeUploadPath = path.join(uploadsPath, "teze");
+const publicPath = path.join(__dirname, "public");
 
 // Create necessary directories if they don't exist
-[uploadsPath, tezeUploadPath].forEach(dir => {
+[uploadsPath, tezeUploadPath].forEach((dir) => {
   console.log(`Checking directory: ${dir}`);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -39,18 +39,22 @@ const publicPath = path.join(__dirname, 'public');
 });
 
 // Security middleware
-app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" },
-  crossOriginEmbedderPolicy: false
-}));
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginEmbedderPolicy: false,
+  })
+);
 
 // CORS configuration
-app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
-  methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-  credentials: true,
-  allowedHeaders: ["Content-Type", "Authorization", "Accept"],
-}));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+  })
+);
 
 // Additional CORS headers
 app.use((req, res, next) => {
@@ -66,37 +70,42 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Logging middleware
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
 }
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 500 // limit each IP to 100 requests per windowMs
+  max: 500, // limit each IP to 100 requests per windowMs
 });
-app.use('/api/', limiter);
+app.use("/api/", limiter);
 
 // Static file serving for teze folder
-app.use('/uploads/teze', express.static(tezeUploadPath, {
-  setHeaders: (res, path) => {
-    res.set('Cross-Origin-Resource-Policy', 'cross-origin');
-  }
-}));
+app.use(
+  "/uploads/teze",
+  express.static(tezeUploadPath, {
+    setHeaders: (res, path) => {
+      res.set("Cross-Origin-Resource-Policy", "cross-origin");
+    },
+  })
+);
 
 // Static files serving for the public folder
 app.use(express.static(publicPath));
 
 // File upload middleware
-app.use(fileUpload({
-  createParentPath: true,
-  limits: { 
-    fileSize: 10 * 1024 * 1024 // 10MB limit
-  },
-  abortOnLimit: true,
-  useTempFiles: true,
-  tempFileDir: '/tmp/'
-}));
+app.use(
+  fileUpload({
+    createParentPath: true,
+    limits: {
+      fileSize: 10 * 1024 * 1024, // 10MB limit
+    },
+    abortOnLimit: true,
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+  })
+);
 
 // API routes
 app.use("/api/auth", authRoutes);
@@ -159,7 +168,9 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
       console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
-      console.log(`Frontend URL: ${process.env.FRONTEND_URL || "http://localhost:3000"}`);
+      console.log(
+        `Frontend URL: ${process.env.FRONTEND_URL || "http://localhost:3000"}`
+      );
     });
   } catch (error) {
     console.error("Failed to start server:", error);
