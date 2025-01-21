@@ -100,24 +100,8 @@ function App() {
         />
       )}
       {step === 1 && <AlegeProfesor />}
-      {step === 2 && <AcceptareColaborare />}
+      {step === 2 && <AcceptareColaborare setStep={setStep} />}
       {step === 3 && <RaspunsCerere onTrimiteDinNou={handleTrimiteDinNou} />}
-      <div className="butoane">
-        <button
-          className="btn btn-secondary me-2"
-          onClick={handlePrev}
-          disabled={step === 0}
-        >
-          Previous
-        </button>
-        <button
-          className="btn btn-primary"
-          onClick={handleNext}
-          disabled={step === 3}
-        >
-          Next
-        </button>
-      </div>
     </>
   );
 

@@ -24,6 +24,10 @@ router.put(
   "/updateThesisStareNeincarcata/:id",
   thesisController.updateThesisStareNeincarcata
 );
+router.put(
+  "/updateThesisStareSemnata/:id",
+  thesisController.updateThesisStareSemnata
+);
 
 //router.get("/getThesisByStudent/:id", thesisController.getThesisByStudentId);
 

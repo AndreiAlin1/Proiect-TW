@@ -153,6 +153,8 @@ function FormCompletare({
           setStep(2);
         } else if (result === "Respinsă") {
           setStep(1);
+        } else if (result === "Semnata") {
+          setStep(3);
         }
       }
     };

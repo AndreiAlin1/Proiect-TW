@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useEffect } from "react";
+
+import DownloadSemnata from "./DownloadSemnata";
 
 function RaspunsCerere({ onTrimiteDinNou }) {
-  const [primita, setIsPrimita] = useState(false);
-  const [aprobata, setIsAprobata] = useState(false);
+  const [primita, setIsPrimita] = useState(true);
+  const [aprobata, setIsAprobata] = useState(true);
 
   function handlePrimireCerere() {
     setIsPrimita(true);
@@ -39,13 +42,10 @@ function RaspunsCerere({ onTrimiteDinNou }) {
           descarca mai jos.
         </p>
         <p>Spor la lucru!</p>
-        <a
-          href="/path/to/file.pdf" // Aici vei schimba cu link-ul către fișierul tău din server
-          download="Cerere_Semnata.pdf"
-          className="formButton mt-3"
-        >
-          Descarcă Documentul
-        </a>
+
+        <DownloadSemnata
+          studentId={sessionStorage.getItem("userId")}
+        ></DownloadSemnata>
       </div>
     </>
   ) : (

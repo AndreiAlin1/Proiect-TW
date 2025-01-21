@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
-function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
-  const [thesisStatus, setThesisStatus] = useState('Neîncărcată');
+function AcceptaColaborare({ setStep }) {
+  const [thesisStatus, setThesisStatus] = useState("Neîncărcată");
   const [fileUrl, setFileUrl] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -9,7 +9,7 @@ function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
 
   const fetchThesisStatus = async () => {
     const studentId = sessionStorage.getItem("userId");
-  
+
     if (studentId) {
       try {
         const response = await fetch(
@@ -17,14 +17,14 @@ function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
             studentId
           )}`
         );
-  
+
         if (!response.ok) {
           throw new Error("Failed to fetch thesis info");
         }
-  
+
         const data = await response.json();
         console.log("Received thesis:", data);
-  
+
         if (data.success) {
           return data.theses.stare;
         }
@@ -34,15 +34,22 @@ function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
     }
   };
 
-
   useEffect(() => {
-    console.log("am ajuns in componenta asta");
-    const studentId = sessionStorage.getItem('userId');
-    if (studentId) {
-      fetchThesisStatus(studentId);
-    } else {
-      setErrorMessage("ID-ul studentului nu a fost găsit");
-    }
+    const functie = async () => {
+      console.log("am ajuns in componenta asta");
+      const studentId = sessionStorage.getItem("userId");
+      if (studentId) {
+        const result = await fetchThesisStatus(studentId);
+        console.log("result este " + JSON.stringify(result, null, 2));
+
+        if (result === "Semnata") {
+          setStep(3);
+        }
+      } else {
+        setErrorMessage("ID-ul studentului nu a fost găsit");
+      }
+    };
+    functie();
   }, []);
 
   const handleFileSelect = (event) => {
@@ -65,16 +72,19 @@ function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
     setErrorMessage(null);
 
     const formData = new FormData();
-    formData.append('file', selectedFile);
+    formData.append("file", selectedFile);
 
-    const studentId = sessionStorage.getItem('userId');
-    console.log("IDUL STUDENTIULUI ESSSTEEEE ",studentId)
-    
+    const studentId = sessionStorage.getItem("userId");
+    console.log("IDUL STUDENTIULUI ESSSTEEEE ", studentId);
+
     try {
-      const response = await fetch(`http://localhost:3001/api/thesis/uploadThesis/${encodeURI(studentId)}`, {
-        method: 'PUT',
-        body: formData
-      });
+      const response = await fetch(
+        `http://localhost:3001/api/thesis/uploadThesis/${encodeURI(studentId)}`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -84,6 +94,7 @@ function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
 
       if (data.success) {
         await fetchThesisStatus(studentId);
+        setThesisStatus("In evaluare");
       } else {
         throw new Error(data.message || "Eroare la încărcarea lucrării");
       }
@@ -112,7 +123,7 @@ function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
           )}
         </label>
       </div>
-      <button 
+      <button
         type="submit"
         className="formButton"
         disabled={isUploading || !selectedFile}
@@ -122,7 +133,7 @@ function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
     </form>
   );
 
-  if (thesisStatus === 'Neîncărcată') {
+  if (thesisStatus === "Neîncărcată") {
     return (
       <>
         <div className="raspunsCerere">
@@ -130,19 +141,17 @@ function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
             <i className="bi bi-three-dots text-accent"></i>
           </div>
           <p className="raspunsText">
-            Nu ai încărcat încă lucrarea. Te rugăm să încarci lucrarea semnată de către
-            profesorul coordonator.
+            Nu ai încărcat încă lucrarea. Te rugăm să încarci lucrarea semnată
+            de către profesorul coordonator.
           </p>
-          {errorMessage && (
-            <p className="text-danger mt-2">{errorMessage}</p>
-          )}
+          {errorMessage && <p className="text-danger mt-2">{errorMessage}</p>}
           {renderUploadSection()}
         </div>
       </>
     );
   }
 
-  if (thesisStatus === 'In evaluare') {
+  if (thesisStatus === "In evaluare") {
     return (
       <>
         <div className="raspunsCerere">
@@ -150,17 +159,16 @@ function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
             <i className="bi bi-three-dots text-accent"></i>
           </div>
           <p className="raspunsText">
-            Lucrarea ta a fost trimisă și este în curs de evaluare de către profesorul coordonator.
+            Lucrarea ta a fost trimisă și este în curs de evaluare de către
+            profesorul coordonator.
           </p>
-          {errorMessage && (
-            <p className="text-danger mt-2">{errorMessage}</p>
-          )}
+          {errorMessage && <p className="text-danger mt-2">{errorMessage}</p>}
         </div>
       </>
     );
   }
 
-  if (thesisStatus === 'Aprobată') {
+  if (thesisStatus === "Aprobată") {
     return (
       <>
         <div className="acceptareContainer">
@@ -169,26 +177,25 @@ function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
         </div>
         <div className="acceptareContainerV2">
           <p>
-            Lucrarea ta a fost aprobată de către profesorul coordonator. 
+            Lucrarea ta a fost aprobată de către profesorul coordonator.
             {fileUrl && " O poți descărca mai jos."}
           </p>
           <p>Spor la lucru!</p>
           {fileUrl && (
-          <a
+            <a
               href={fileUrl}
               download="Lucrare_Licenta.pdf"
               className="formButton mt-3"
-           >
-    Descarcă Documentul
-  </a>
-)}
-
+            >
+              Descarcă Documentul
+            </a>
+          )}
         </div>
       </>
     );
   }
 
-  if (thesisStatus === 'Respinsă') {
+  if (thesisStatus === "Respinsă") {
     return (
       <>
         <div className="acceptareContainer">
@@ -197,10 +204,12 @@ function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
         </div>
         <div className="acceptareContainerV2">
           <p>
-            Lucrarea ta a fost respinsă de către profesorul coordonator. 
+            Lucrarea ta a fost respinsă de către profesorul coordonator.
             Probabil sunt necesare modificări sau completări.
           </p>
-          <p>Te rugăm să încerci din nou după efectuarea modificărilor necesare.</p>
+          <p>
+            Te rugăm să încerci din nou după efectuarea modificărilor necesare.
+          </p>
           {renderUploadSection()}
         </div>
       </>

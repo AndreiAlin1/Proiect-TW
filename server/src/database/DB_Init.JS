@@ -61,7 +61,7 @@ async function createTables(conn) {
     id INT AUTO_INCREMENT PRIMARY KEY,
     titlu_lucrare VARCHAR(255),
     data_incarcare TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    stare enum('In evaluare','Aprobată','Respinsă', 'Neîncărcată'),
+    stare enum('In evaluare','Aprobată','Respinsă', 'Neîncărcată',"Semnata"),
     fisier VARCHAR(255),
     id_student VARCHAR(255),
     id_profesor VARCHAR(255),

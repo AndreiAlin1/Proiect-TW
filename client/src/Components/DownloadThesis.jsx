@@ -1,10 +1,37 @@
 import { useState } from "react";
 
-// Frontend React Component
-const DownloadThesis = ({ studentId }) => {
+const DownloadThesis = ({ studentId, thesisId }) => {
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  console.log("THIS IS STUDENT ID IN DOWNLOAD THESIS " + studentId);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const updateThesisStatusSigned = async (thesisId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/api/thesis/updateThesisStareSemnata/${encodeURIComponent(
+          thesisId
+        )}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update thesis status");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error updating thesis status:", error);
+      throw error;
+    }
+  };
 
   const handleDownload = async () => {
     setIsDownloading(true);
@@ -24,7 +51,6 @@ const DownloadThesis = ({ studentId }) => {
         throw new Error(response.statusText);
       }
 
-      // Get filename from Content-Disposition header if available
       const contentDisposition = response.headers.get("Content-Disposition");
       let filename = "thesis.pdf";
       if (contentDisposition) {
@@ -34,7 +60,6 @@ const DownloadThesis = ({ studentId }) => {
         }
       }
 
-      // Convert response to blob and create download link
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -51,8 +76,48 @@ const DownloadThesis = ({ studentId }) => {
     }
   };
 
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    setErrorMessage(null);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      console.log("STUDENT ID STUDENT ID STUDENT ID " + studentId);
+      const response = await fetch(
+        `http://localhost:3001/api/thesis/uploadThesis/${encodeURI(studentId)}`,
+        {
+          method: "PUT",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      event.target.value = ""; // Reset file input
+      setSelectedFile(null);
+      console.log("THESIS ID CARE AR TRB SA FIE BUN " + thesisId);
+      const asyncFunctionToRun = async () => {
+        await updateThesisStatusSigned(thesisId);
+      };
+      asyncFunctionToRun();
+    } catch (error) {
+      setErrorMessage(error.message || "Eroare la încărcarea lucrării");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
-    <div style={{ backgroundColor: "#2c2c2c", marginTop: "10px" }}>
+    <div
+      style={{ backgroundColor: "#2c2c2c", marginTop: "10px", padding: "20px" }}
+    >
       <button
         onClick={handleDownload}
         className="formButton"
@@ -60,6 +125,36 @@ const DownloadThesis = ({ studentId }) => {
       >
         {isDownloading ? "Se descarcă..." : "Descarcă Lucrarea"}
       </button>
+
+      <div
+        style={{
+          marginTop: "15px",
+          backgroundColor: "#2c2c2c",
+          alignItems: "center",
+          alignSelf: "center",
+          justifyContent: "center",
+          display: "flex",
+        }}
+      >
+        <input
+          type="file"
+          id="fileInput"
+          onChange={handleFileChange}
+          accept=".pdf,.doc,.docx"
+          style={{ display: "none" }}
+        />
+        <label
+          htmlFor="fileInput"
+          className="formButton"
+          style={{
+            cursor: "pointer",
+            opacity: isUploading ? 0.7 : 1,
+          }}
+        >
+          {isUploading ? "Se trimite..." : "Trimite Lucrarea"}
+        </label>
+      </div>
+
       {errorMessage && <p className="text-danger mt-2">{errorMessage}</p>}
     </div>
   );

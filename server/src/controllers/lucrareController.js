@@ -183,7 +183,7 @@ const getThesisByStudentId = async (req, res) => {
     const { studentId } = req.params;
 
     const [theses] = await conn.execute(
-      "SELECT * FROM lucrare WHERE id_student = ?",
+      "SELECT * FROM lucrare WHERE id_student = ? ORDER BY data_incarcare DESC LIMIT 1",
       [studentId]
     );
 
@@ -307,6 +307,48 @@ const updateThesisStareAcceptata = async (req, res) => {
     const [result] = await conn.execute(
       "UPDATE lucrare SET stare = ? WHERE id = ?",
       [validStates[1], id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res
+        .status(404)
+        .json(
+          createResponse(false, "Thesis not found or status unchanged", null)
+        );
+    }
+
+    return res
+      .status(200)
+      .json(createResponse(true, "Thesis status updated successfully", null));
+  } catch (err) {
+    return res
+      .status(500)
+      .json(
+        createResponse(false, "Error updating thesis status", null, err.message)
+      );
+  } finally {
+    conn.release(); // Release the connection back to the pool
+  }
+};
+
+const updateThesisStareSemnata = async (req, res) => {
+  console.log("merge");
+  const conn = await pool.getConnection(); // Get a connection from the pool
+  try {
+    const { id } = req.params;
+    console.log("ID -UL THESIS DORIT" + id);
+
+    const validStates = [
+      "Semnata",
+      "In evaluare",
+      "Aprobată",
+      "Respinsă",
+      "Neîncărcată",
+    ];
+
+    const [result] = await conn.execute(
+      "UPDATE lucrare SET stare = ? WHERE id = ?",
+      [validStates[0], id]
     );
 
     if (result.affectedRows === 0) {
@@ -791,4 +833,5 @@ module.exports = {
   updateThesisStareNeincarcata,
   uploadThesis,
   downloadThesis,
+  updateThesisStareSemnata,
 };

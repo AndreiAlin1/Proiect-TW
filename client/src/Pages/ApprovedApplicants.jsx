@@ -182,9 +182,7 @@ export default function ApprovedApplicants({ onLogout }) {
     (student) => student.thesis.stare === "Aprobată"
   );
   approvedStudents.map((student) =>
-    console.log(
-      "DECI AVEM ID SI NUME " + student.id + " " + student.nume_complet
-    )
+    console.log("DECI AVEM ID SI NUME " + JSON.stringify(student, null, 2))
   );
 
   return (
@@ -195,14 +193,16 @@ export default function ApprovedApplicants({ onLogout }) {
 
         {approvedStudents.length > 0 ? (
           <div className="row row-cols-1 row-cols-md-2 g-4">
-            {approvedStudents.map((student) => (
+            {approvedStudents.map((student, index) => (
               <div>
                 <CardStudent
+                  key={student.id || index}
                   studentId={student.id}
                   name={student.nume_complet}
                   specializare={student.specializare}
                   serie={student.serie}
                   grupa={student.grupa}
+                  thesisId={student.thesis.id}
                 />
               </div>
             ))}
