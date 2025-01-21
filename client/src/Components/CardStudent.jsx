@@ -11,6 +11,7 @@ export default function Card({ studentId, name, specializare, serie, grupa }) {
         <p className="card-text">{name}</p>
         <p className="card-text">{serie}</p>
         <p className="card-text">{grupa}</p>
+        <button className="descarca-cererea">Descarca cererea</button>
       </div>
       <div className="buttons">
         <DownloadThesis studentId={studentId}></DownloadThesis>
