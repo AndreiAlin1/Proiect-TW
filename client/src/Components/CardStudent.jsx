@@ -1,7 +1,6 @@
 import React from "react";
 import "../Styles/CardStudent.css";
 
-//aici trebuiet sa preluam din bd pentru fiecare id corespunzator lista cu cei care vor sa aplice , care au statusul de pending
 export default function Card({ name, specializare, serie, grupa }) {
   return (
     <div className="card">
@@ -10,6 +9,7 @@ export default function Card({ name, specializare, serie, grupa }) {
         <p className="card-text">{specializare}</p>
         <p className="card-text">{serie}</p>
         <p className="card-text">{grupa}</p>
+        <button className="descarca-cererea">Descarca cererea</button>
       </div>
     </div>
   );
