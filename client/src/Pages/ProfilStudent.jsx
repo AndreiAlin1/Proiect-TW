@@ -237,7 +237,9 @@ function ProfilStudent({
           <div className="formGroup">
             <label id="labelProfesor">Titlu lucrare de licenta:</label>
             <label id="labelProfesor">
-              {formData.titluLucrare ? formData.titluLucrare : "n ai ales inca"}
+              {formData.titluLucrare
+                ? formData.titluLucrare
+                : "Lucrarea n-a fost aleasa inca"}
             </label>
           </div>
 

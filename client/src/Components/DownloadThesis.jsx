@@ -123,7 +123,9 @@ const DownloadThesis = ({ studentId, thesisId }) => {
         className="formButton"
         disabled={isDownloading}
       >
-        {isDownloading ? "Se descarcă..." : "Descarcă Lucrarea"}
+        {isDownloading
+          ? "Se descarcă..."
+          : "Descarcă cererea primita de la student"}
       </button>
 
       <div
@@ -151,7 +153,7 @@ const DownloadThesis = ({ studentId, thesisId }) => {
             opacity: isUploading ? 0.7 : 1,
           }}
         >
-          {isUploading ? "Se trimite..." : "Trimite Lucrarea"}
+          {isUploading ? "Se trimite..." : "Trimite sererea semnata"}
         </label>
       </div>
 

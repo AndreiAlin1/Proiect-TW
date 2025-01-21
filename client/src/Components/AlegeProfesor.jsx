@@ -322,7 +322,6 @@ function AlegeProfesor() {
               raspuns.
             </p>
           </div>
-          <button onClick={handleRespingereColaborare}>Respingere</button>
         </>
       ) : (
         <>
