@@ -543,7 +543,6 @@ const uploadThesis = async (req, res) => {
   const conn = await pool.getConnection();
   
   try {
-    // Check if file exists in request
     if (!req.files?.file) {
       return res.status(400).json(createResponse(false, "No file uploaded"));
     }

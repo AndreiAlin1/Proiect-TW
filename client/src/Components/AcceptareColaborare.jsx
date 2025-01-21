@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function RaspunsCerere({ onTrimiteDinNou, profesorId }) {
+function AcceptaColaborare({ onTrimiteDinNou, profesorId }) {
   const [thesisStatus, setThesisStatus] = useState('Neîncărcată');
   const [fileUrl, setFileUrl] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -210,4 +210,4 @@ function RaspunsCerere({ onTrimiteDinNou, profesorId }) {
   return null;
 }
 
-export default RaspunsCerere;
+export default AcceptaColaborare;
